@@ -1,0 +1,10 @@
+CREATE DATABASE budgetedDB;
+CREATE TABLE accounts (accountId INT(10) UNIQUE NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+name VARCHAR(10), 
+email VARCHAR(45), 
+password VARCHAR(32));
+
+INSERT INTO accounts (name, email, password) VALUES ('Tuong', 'tuong@gmail.com', 'password123');
+SELECT * from accounts;
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
