@@ -11,6 +11,7 @@ function Users() {
       const url = '/user/profile';
       const response = await fetch(url);
       const json =  await response.json();
+      console.log(json);
       setUsers(json);
 
     }
@@ -24,7 +25,7 @@ function Users() {
     <h2>Users</h2>
     <ul>
       {users.map((user) => (
-        <li key={user.id}>{user.name}</li>
+        <li key={user.accountId}>{user.name}</li>
       ))}
     </ul>
 
