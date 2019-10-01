@@ -3,7 +3,7 @@ body {
   padding: 0;
   height: 100vh;
   font-family: Verdana, Geneva, sans-serif;
-  text-align: center;
+  text-align: left;
 }
 
 h1 {
@@ -24,4 +24,10 @@ input {
   padding: 0.25em;
   margin-top: 0.5em;
   border: 3px solid black;
+}
+
+button {
+  justify-content: center;
+  padding:0.25em;
+
 }
