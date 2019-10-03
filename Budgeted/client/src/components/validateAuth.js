@@ -12,5 +12,12 @@ export default function validateAuth(values) {
   } else if (values.password.length < 6) {
     errors.password = "Password must be at least 6 characters";
   }
+
+
+  if (!values.password2) {
+    errors.password2 = "Required Password Re-entry";
+  } else if (values.password != values.password2){
+    errors.password2 = "Passwords must match!"
+  }
   return errors;
 }

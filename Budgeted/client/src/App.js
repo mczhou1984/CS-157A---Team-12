@@ -9,6 +9,7 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 function App() {
   return (<header className="App-header">
+      <div style={{background: 'linear-gradient(to bottom, #1e5799 0%,#2989d8 50%,#207cca 100%,#7db9e8 100%)'}}></div>
     <Router>
       <Nav/>
       <Switch>

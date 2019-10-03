@@ -1,57 +1,91 @@
 import React, {useState, useEffect} from 'react';
-import './register.module.scss';
+import {StyledRegister} from './register.styled.js';
 import useFormValidation from "../useFormValidation";
 import validateAuth from "../validateAuth";
+import styled from 'styled-components'
 
-const INITIAL_STATE = {
-  email: "",
-  password: ""
-};
 
 function Register() {
   const {
     handleSubmit,
-    handleChange,
-    handleBlur,
-    values,
+    handleNameChange,
+    handleEmailChange,
+    handlePasswordChange,
+    handlePassword2Change,
+    name,
+    email,
+    password,
+    password2,
     errors,
-    isSubmitting
-  } = useFormValidation(INITIAL_STATE, validateAuth);
+    isSubmitting,
+    emailInput,
+    passwordInput,
+    password2Input
+  } = useFormValidation(validateAuth);
   // const [email, setEmail] = React.useState("");
   // const [password, setPassword] = React.useState("");
 
-
+//console.log(email);
   return (
+    <StyledRegister>
     <div className="container">
-      <h1>Register</h1>
+      <h2>Register</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          onChange={handleChange}
-          onBlur={handleBlur}
-          name="email"
-          value={values.email}
-          className={errors.email && "error-input"}
-          autoComplete="off"
-          placeholder="Your email address"
-        />
-        {errors.email && <p className="error-text">{errors.email}</p>}
-        <input
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.password}
-          className={errors.password && "error-input"}
-          name="password"
-          type="password"
-          placeholder="Choose a safe password"
-        />
-        {errors.password && <p className="error-text">{errors.password}</p>}
-        <div>
-          <button class="btn btn-primary" disabled={isSubmitting} type="submit">
-            Submit
-          </button>
-        </div>
+
+
+      <input
+      onChange={handleNameChange}
+      class="form-control mr-sm-2"
+      type="text"
+      name="name"
+      placeholder="Enter Name"
+      value={name}
+      />
+
+      <p class={emailInput.p1}>
+      <input
+      onChange={handleEmailChange}
+      class={emailInput.input == null ? "form-control mr-sm-2": emailInput.input}
+      type="text"
+      name="email"
+      placeholder="Enter Email"
+      value={email}
+      />
+        <p class="invalid-feedback">{emailInput.msg}</p>
+      </p>
+
+      <p class={passwordInput.p1}>
+      <input
+      onChange={handlePasswordChange}
+      class={passwordInput.input == null ? "form-control mr-sm-2": passwordInput.input}
+      type="password"
+      name="password"
+      placeholder="Enter Password"
+      value={password}
+      />
+      <p class="invalid-feedback">{passwordInput.msg}</p>
+    </p>
+
+          <p class={password2Input.p1}>
+      <input
+      onChange={handlePassword2Change}
+      class={password2Input.input == null ? "form-control mr-sm-2": password2Input.input}
+      type="password"
+      name="password2"
+      placeholder="Re-enter Password"
+      value={password2}
+      />
+      <p class="invalid-feedback">{password2Input.msg}</p>
+    </p>
+
+
+
+      <button type="submit" class="btn btn-primary" disabled={isSubmitting}>Register</button>
       </form>
     </div>
+
+
+    </StyledRegister>
   );
 }
 
