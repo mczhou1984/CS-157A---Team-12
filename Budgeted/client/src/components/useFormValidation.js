@@ -10,6 +10,7 @@ function useFormValidation(validate) {
   const [emailInput, setEmailInput] = React.useState({});
   const [passwordInput, setPasswordInput] = React.useState({});
   const [password2Input, setPassword2Input] = React.useState({});
+  const [nameInput, setNameInput] = React.useState({});
 
   // React.useEffect(() => {
   //   // if (isSubmitting) {
@@ -26,6 +27,20 @@ function useFormValidation(validate) {
 
   function handleNameChange(event){
     setName(event.target.value);
+    let nameState = {};
+
+    if(name){
+        nameState  = {
+            p1:"form-group  has-success",
+            input:"form-control mr-sm-2 is-valid",
+            p2:"valid-feedback",
+            msg:errors.email
+          }
+    }
+
+    setNameInput(nameState);
+
+
 
 
   }
@@ -148,7 +163,8 @@ function useFormValidation(validate) {
     isSubmitting,
     emailInput,
     passwordInput,
-    password2Input
+    password2Input,
+    nameInput
   };
 }
 

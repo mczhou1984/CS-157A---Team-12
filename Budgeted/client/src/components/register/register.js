@@ -20,7 +20,8 @@ function Register() {
     isSubmitting,
     emailInput,
     passwordInput,
-    password2Input
+    password2Input,
+    nameInput
   } = useFormValidation(validateAuth);
   // const [email, setEmail] = React.useState("");
   // const [password, setPassword] = React.useState("");
@@ -32,16 +33,16 @@ function Register() {
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
 
-
+      <p class={nameInput.p1}>
       <input
       onChange={handleNameChange}
-      class="form-control mr-sm-2"
+      class={nameInput.input == null ? "form-control mr-sm-2": nameInput.input}
       type="text"
       name="name"
       placeholder="Enter Name"
       value={name}
       />
-
+    </p>
       <p class={emailInput.p1}>
       <input
       onChange={handleEmailChange}
