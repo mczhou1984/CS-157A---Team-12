@@ -62,6 +62,7 @@ function Register() {
       name="password"
       placeholder="Enter Password"
       value={password}
+      id="p1"
       />
       <p class="invalid-feedback">{passwordInput.msg}</p>
     </p>

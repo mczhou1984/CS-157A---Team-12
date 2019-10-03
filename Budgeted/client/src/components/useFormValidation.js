@@ -88,7 +88,7 @@ function useFormValidation(validate) {
   function handlePassword2Change(event){
     let p2State = {};
     const values = {
-      password:password,
+      password:document.getElementById("p1").value,
       password2:event.target.value
     }
     let errors = (validate(values));
@@ -97,7 +97,7 @@ function useFormValidation(validate) {
 
 
 
-    console.log(errors);
+    //console.log(errors);
     if(errors.password2){
         p2State  = {
         p1:"form-group has-danger",
