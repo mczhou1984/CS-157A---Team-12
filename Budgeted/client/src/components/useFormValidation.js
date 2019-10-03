@@ -11,37 +11,32 @@ function useFormValidation(validate) {
   const [passwordInput, setPasswordInput] = React.useState({});
   const [password2Input, setPassword2Input] = React.useState({});
 
-  React.useEffect(() => {
-    // if (isSubmitting) {
-    //   const noErrors = Object.keys(errors).length === 0;
-    //   if (noErrors) {
-    //     console.log("authenticated!", email, password);
-    //     setSubmitting(false);
-    //   } else {
-    //     setSubmitting(false);
-    //   }
-    // }
-    console.log(emailInput);
-  }, [email,emailInput]);
+  // React.useEffect(() => {
+  //   // if (isSubmitting) {
+  //   //   const noErrors = Object.keys(errors).length === 0;
+  //   //   if (noErrors) {
+  //   //     console.log("authenticated!", email, password);
+  //   //     setSubmitting(false);
+  //   //   } else {
+  //   //     setSubmitting(false);
+  //   //   }
+  //   // }
+  //   console.log(emailInput);
+  // }, [email,emailInput]);
 
   function handleNameChange(event){
     setName(event.target.value);
 
+
   }
 
   function handleEmailChange(event){
-
-        setEmail(event.target.value);
     let emailState = {};
     const values = {
-      name:name,
-      email:email,
-      password:password,
-      password2:password2
+      email:event.target.value
     }
 
-    const validationErrors = validate(values);
-    setErrors(validationErrors);
+    let errors = (validate(values));
     if(errors.email){
         emailState  = {
         p1:"form-group has-danger",
@@ -50,24 +45,26 @@ function useFormValidation(validate) {
         msg:errors.email
       }
 
+    }else{
+      emailState  = {
+      p1:"form-group  has-success",
+      input:"form-control mr-sm-2 is-valid",
+      p2:"valid-feedback",
+      msg:errors.email
     }
-
+    }
+    setErrors(errors);
     setEmailInput(emailState);
+    setEmail(event.target.value);
 
 
   }
   function handlePasswordChange(event){
     let p1State = {};
     const values = {
-      name:name,
-      email:email,
-      password:password,
-      password2:password2
+      password:event.target.value,
     }
-    const validationErrors = validate(values);
-    setErrors(validationErrors);
-
-    setPassword(event.target.value);
+    let errors = (validate(values));
     if(errors.password){
         p1State  = {
         p1:"form-group has-danger",
@@ -76,21 +73,31 @@ function useFormValidation(validate) {
         msg:errors.password
       }
     }
+    else{
+      p1State  = {
+      p1:"form-group  has-success",
+      input:"form-control mr-sm-2 is-valid",
+      p2:"valid-feedback",
+      msg:errors.email
+    }
+    }
+    setErrors(errors);
     setPasswordInput(p1State);
+    setPassword(event.target.value);
   }
   function handlePassword2Change(event){
     let p2State = {};
     const values = {
-      name:name,
-      email:email,
       password:password,
-      password2:password2
+      password2:event.target.value
     }
+    let errors = (validate(values));
 
     const validationErrors = validate(values);
-    setErrors(validationErrors);
 
-    setPassword2(event.target.value);
+
+
+    console.log(errors);
     if(errors.password2){
         p2State  = {
         p1:"form-group has-danger",
@@ -100,7 +107,17 @@ function useFormValidation(validate) {
       }
 
     }
+    else{
+      p2State  = {
+      p1:"form-group  has-success",
+      input:"form-control mr-sm-2 is-valid",
+      p2:"valid-feedback",
+      msg:errors.email
+    }
+    }
+    setErrors(validationErrors);
     setPassword2Input(p2State);
+      setPassword2(event.target.value);
   }
 
 
