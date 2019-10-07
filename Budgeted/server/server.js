@@ -1,7 +1,10 @@
 const express = require('express');
-const mysql = require('mysql');
 const app = express();
 const port = 5000;
+const router = require('./routes');
+const mysql = require('mysql');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 
 //db connection
@@ -12,6 +15,12 @@ const db = mysql.createConnection({
   database: 'budgeteddb'
 });
 
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use('/user',router);
+
+
 db.connect((err)=> {
   if(err){
     throw err;
@@ -20,12 +29,3 @@ db.connect((err)=> {
 });
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
-
-app.get('/user/profile', (req, res) => {
-  let sql = 'SELECT accountId,name, email FROM accounts';
-  db.query(sql, (err, result) =>{
-    if (err) throw err;
-    res.json(result);
-  })
-
-})
