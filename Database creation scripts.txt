@@ -8,3 +8,63 @@ INSERT INTO accounts (name, email, password) VALUES ('Tuong', 'tuong@gmail.com',
 SELECT * from accounts;
 
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+
+CREATE TABLE `budgeteddb`.`analysis` (
+`AnalysisID` INT NOT NULL,
+`Time Period` VARCHAR(45) NOT NULL,
+`Surplus` VARCHAR(45) NOT NULL,
+`Accumulated Saving` VARCHAR(45) NOT NULL,
+PRIMARY KEY (`AnalysisID`));
+
+CREATE TABLE `budgeteddb`.`analysisusestrans&budget` (
+`AnalysisID` INT NOT NULL,
+`TransactionID` VARCHAR(45) NOT NULL,
+`BudgetIDd` VARCHAR(45) NOT NULL);
+
+CREATE TABLE `budgeteddb`.`budget` (
+`BudgetID` INT NOT NULL,
+`Saving Acct` VARCHAR(45) NOT NULL,
+`Balance` VARCHAR(45) NOT NULL,
+`` VARCHAR(45) NULL,
+PRIMARY KEY (`BudgetID`));
+
+CREATE TABLE `budgeteddb`.`budgethasexpenses&income` (
+`BudgetID` INT NOT NULL,
+`IncomeID` VARCHAR(45) NOT NULL,
+`ExpenseID` VARCHAR(45) NOT NULL);
+
+CREATE TABLE `budgeteddb`.`expenses` (
+`ExpenseID` INT NOT NULL,
+`Type` VARCHAR(45) NOT NULL,
+`Amount` VARCHAR(45) NOT NULL,
+`` VARCHAR(45) NULL,
+PRIMARY KEY (`ExpenseID`));
+
+CREATE TABLE `budgeteddb`.`income` (
+`IncomeID` INT NOT NULL,
+`Type` VARCHAR(45) NOT NULL,
+`Amount` VARCHAR(45) NOT NULL,
+`` VARCHAR(45) NULL,
+PRIMARY KEY (`IncomeID`));
+
+CREATE TABLE `budgeteddb`.`transactions` (
+`TransactionID` INT NOT NULL,
+`Date` VARCHAR(45) NOT NULL,
+`Type` VARCHAR(45) NOT NULL,
+`Amount` VARCHAR(45) NOT NULL,
+PRIMARY KEY (`TransactionID`));
+
+CREATE TABLE `budgeteddb`.`userhasbudget` (
+`UserID` INT NOT NULL,
+`BudgetID` VARCHAR(45) NOT NULL);
+
+CREATE TABLE `budgeteddb`.`usermakestransactions1` (
+`userID` INT NOT NULL,
+`BudgetID` VARCHAR(45) NOT NULL);
+
+CREATE TABLE `budgeteddb`.`user` (
+`userID` INT NOT NULL,
+`Name` VARCHAR(45) NOT NULL,
+`Email` VARCHAR(45) NOT NULL,
+`Password` VARCHAR(45) NOT NULL,
+PRIMARY KEY (`userID`));
