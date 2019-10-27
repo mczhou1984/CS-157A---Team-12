@@ -161,7 +161,29 @@ function useFormValidation(validate, props) {
 
   }
 
+  function handleLogin(event) {
+    event.preventDefault();
+    const url = '/user/authenticate';
+    const user = {
+      email: document.getElementById("email").value,
+      password: document.getElementById("p1").value,
+    }
+
+
+      axios.post(url, user)
+      .then(res =>{
+        if(res.data.success){
+          props.history.push('/');
+        }
+      })
+  }
+
+
+
+
+
   return {
+    handleLogin,
     handleSubmit,
     handleNameChange,
     handleEmailChange,
