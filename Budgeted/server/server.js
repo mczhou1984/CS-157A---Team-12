@@ -5,15 +5,10 @@ const router = require('./routes');
 const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-
+const config = require('./config/database');
 
 //db connection
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password:'password',
-  database: 'budgeteddb'
-});
+const db = mysql.createConnection(config);
 
 
 app.use(cors());
