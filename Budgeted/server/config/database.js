@@ -2,7 +2,8 @@ const config = {
   host: 'localhost',
   user: 'root',
   password:'password',
-  database: 'budgeteddb'
+  database: 'budgeteddb',
+  secret: 'yoursecret'
 };
 
 module.exports = config;
