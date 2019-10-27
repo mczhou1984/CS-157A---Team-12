@@ -11,12 +11,23 @@ module.exports.addUser = function(user, callback) {
       let sql = 'INSERT into accounts (name, email, password) VALUES(?,?,?)';
       db.query(sql, [user.name, user.email, user.password], (err) => {
         callback(err);
+      });
     });
-
   });
-
-});
-
+}
 
 
+module.exports.comparePassword = function(candidatePassword, hash, callback){
+  bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
+    if(err) throw err;
+    callback(null, isMatch);
+  });
+}
+
+
+module.exports.getUserByEmail = function(email, callback){
+  let sql = 'SELECT accountId, email, password, name FROM accounts where email = ?';
+  db.query(sql, [email], (err, user) => {
+    callback(err, user);
+  });
 }
