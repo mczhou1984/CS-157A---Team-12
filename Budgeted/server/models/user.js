@@ -31,3 +31,10 @@ module.exports.getUserByEmail = function(email, callback){
     callback(err, user);
   });
 }
+
+module.exports.getProfile = function(email, callback){
+  let sql = 'SELECT accountId, email, password, name FROM accounts where email = ?';
+  db.query(sql, [email], (err, user) => {
+    callback(err, user);
+  });
+}

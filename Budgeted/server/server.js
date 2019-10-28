@@ -6,13 +6,22 @@ const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const config = require('./config/database');
+const passport = require('passport');
+const passportFunct = require('./config/passport');
+
+passportFunct(passport);
 
 //db connection
 const db = mysql.createConnection(config);
 
+// Passport Middleware
+
+
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use('/user',router);
 
 

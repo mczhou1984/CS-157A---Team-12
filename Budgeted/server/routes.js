@@ -5,6 +5,8 @@ const config = require('./config/database');
 const User = require('./models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
+// require('./config/passport')(passport);
 
 const db = mysql.createConnection(config);
 
@@ -30,6 +32,10 @@ router.post('/register', (req, res) => {
 })
 
 
+router.get('/dashboard', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+  res.json({user: req.user});
+})
+
 router.post('/authenticate', (req, res) => {
 const email = req.body.email;
 const password = req.body.password;
@@ -48,10 +54,10 @@ User.getUserByEmail(email, (err, user) => {
         });
 
 
-        console.log(user);
+        //console.log(user);
         res.json({
           success: true,
-          token: 'JWT '+token,
+          token: 'Bearer '+token,
           user: {
             id: user[0].accountId,
             name: user[0].name,
