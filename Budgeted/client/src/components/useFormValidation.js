@@ -173,7 +173,9 @@ function useFormValidation(validate, props) {
       axios.post(url, user)
       .then(res =>{
         if(res.data.success){
-          props.history.push('/');
+          console.log(res.data);
+          localStorage.setItem('userData', JSON.stringify(res.data));
+          props.history.push('/dashboard');
         }
       })
   }

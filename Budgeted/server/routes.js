@@ -54,7 +54,6 @@ User.getUserByEmail(email, (err, user) => {
         });
 
 
-        //console.log(user);
         res.json({
           success: true,
           token: 'Bearer '+token,
