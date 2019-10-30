@@ -15,8 +15,6 @@ function Dashboard() {
 
       axios.get(url)
       .then(res =>{
-          console.log(res.data);
-          console.log(res.data.user[0].name);
           setUserData(res.data.user[0]);
       })
 

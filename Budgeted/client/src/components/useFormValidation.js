@@ -2,6 +2,7 @@ import React from "react";
 import axios from 'axios';
 import {useRoutes, useRedirect} from 'hookrouter';
 import { browserHistory } from 'react-router';
+import auth from './auth'
 
 
 function useFormValidation(validate, props) {
@@ -173,9 +174,15 @@ function useFormValidation(validate, props) {
       axios.post(url, user)
       .then(res =>{
         if(res.data.success){
-          console.log(res.data);
-          localStorage.setItem('userData', JSON.stringify(res.data));
-          props.history.push('/dashboard');
+          auth.login(() =>{
+            console.log(res.data);
+              localStorage.setItem('token', res.data.token);
+              localStorage.setItem('userData', JSON.stringify(res.data));
+
+          })
+          props.history.push('/dashboard')
+
+
         }
       })
   }

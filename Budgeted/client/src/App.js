@@ -1,12 +1,14 @@
-import React from 'react';
-import './App.css';
-import Users from './components/users/users';
-import Nav from './components/nav/nav';
-import Register from './components/register/register';
-import Login from './components/login/login';
-import Home from './components/home/home';
-import Dashboard from './components/dashboard/dashboard';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import React from 'react'
+import './App.css'
+import Users from './components/users/users'
+import Nav from './components/nav/nav'
+import Register from './components/register/register'
+import Login from './components/login/login'
+import Home from './components/home/home'
+import Dashboard from './components/dashboard/dashboard'
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import { ProtectedRoute } from './components/protected.route'
+import { PublicRoute } from './components/public.route'
 
 function App() {
   return (<header className="App-header">
@@ -14,10 +16,10 @@ function App() {
     <Router>
       <Nav/>
       <Switch>
-        <Route path="/" exact component={Users}/>
-        <Route path="/login" component={Login}/>
-        <Route path="/register" component={Register}/>
-        <Route path="/dashboard" component={Dashboard}/>
+        <PublicRoute path="/" exact component={Users}/>
+        <PublicRoute path="/login" component={Login}/>
+        <PublicRoute path="/register" component={Register}/>
+        <ProtectedRoute path="/dashboard" component={Dashboard}/>
       </Switch>
     </Router>
   </header>);

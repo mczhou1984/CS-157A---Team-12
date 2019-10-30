@@ -33,6 +33,7 @@
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
-    "hookrouter": "^1.2.3"
+    "hookrouter": "^1.2.3",
+    "jwt-decode": "^2.2.0"
   }
 }
