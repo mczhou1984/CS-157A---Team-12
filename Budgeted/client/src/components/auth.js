@@ -5,12 +5,12 @@ class Auth {
   }
 
   login(cb) {
+    this.authenticated = true
     cb()
   }
 
   logout() {
     localStorage.clear();
-    console.log(localStorage.getItem('token'))
   }
 
   isAuthenticated() {

@@ -4,12 +4,14 @@ import auth from "../auth";
 import {Link} from 'react-router-dom';
 
 function NavButtonsList() {
-
   const [isAuthenticated, setIsAuthenticated] = React.useState(auth.isAuthenticated())
-  const forceUpdate = useCallback(() => setIsAuthenticated({}), []);
-  useEffect(()=>{
-      setIsAuthenticated(auth.isAuthenticated())
-  },[isAuthenticated])
+
+useEffect(() =>{
+  setIsAuthenticated(auth.isAuthenticated())
+},[isAuthenticated])
+
+console.log(auth.isAuthenticated())
+
 
   return (
     !isAuthenticated
@@ -18,16 +20,12 @@ function NavButtonsList() {
       <Link to="/login" class="nav-link">
         <li class="nav-item" onClick={() => {
             setIsAuthenticated(auth.isAuthenticated())
-            forceUpdate()
           }}>
           Login
         </li>
       </Link>
       <Link to="/register" class="nav-link" eventKey="link-1">
-        <li class="nav-item" onClick={() => {
-            setIsAuthenticated(auth.isAuthenticated())
-            forceUpdate()
-          }}>
+        <li class="nav-item">
           Register
         </li>
       </Link>
@@ -36,9 +34,8 @@ function NavButtonsList() {
     <ul class="navbar-nav mr-auto">
       <Link to="/login" class="nav-link" eventKey="link-1">
         <li class="nav-item" onClick={() => {
-            setIsAuthenticated(auth.isAuthenticated())
             auth.logout()
-            forceUpdate()
+            setIsAuthenticated(auth.isAuthenticated())
           }}>
           Logout
         </li>

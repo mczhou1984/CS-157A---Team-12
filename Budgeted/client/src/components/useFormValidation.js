@@ -178,9 +178,11 @@ function useFormValidation(validate, props) {
             console.log(res.data);
               localStorage.setItem('token', res.data.token);
               localStorage.setItem('userData', JSON.stringify(res.data));
+              auth.isAuthenticated();
 
           })
-          props.history.push('/dashboard')
+          window.location.reload();
+
 
 
         }
