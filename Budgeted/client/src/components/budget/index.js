@@ -29,8 +29,8 @@ export default function() {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', marginTop: '20px'}}>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: 500, marginTop: 30, margin: '0 auto' }}>
-                <div>
-                    <button style={{ width: 50 }} onClick={() => setFormType(null)}>Back</button>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <button style={{ width: 50, height: 25 }} onClick={() => setFormType(null)}>Back</button>
                     <h1>{READABLE_FORM_NAMES[currentFormType]}</h1>
                 </div>
                 <input value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="Insert a type" />
