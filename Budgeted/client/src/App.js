@@ -5,6 +5,8 @@ import Nav from './components/nav/nav'
 import Register from './components/register/register'
 import Login from './components/login/login'
 import Home from './components/home/home'
+import Income from './components/income'
+import Expenses from './components/expenses'
 import Dashboard from './components/dashboard/dashboard'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import { ProtectedRoute } from './components/protected.route'
@@ -20,6 +22,8 @@ function App() {
         <PublicRoute path="/login" component={Login}/>
         <PublicRoute path="/register" component={Register}/>
         <ProtectedRoute path="/dashboard" component={Dashboard}/>
+        <ProtectedRoute path="/income" component={Income}/>
+        <ProtectedRoute path="/expenses" component={Expenses}/>
       </Switch>
     </Router>
   </header>);
