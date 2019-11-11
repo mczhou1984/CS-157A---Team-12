@@ -33,6 +33,11 @@ console.log(auth.isAuthenticated())
     </ul>
     :
     <ul class="navbar-nav mr-auto">
+      <Link to="/budget" class="nav-link" eventKey="link-1">
+        <li class="nav-item">
+          Budget
+        </li>
+      </Link>
       <Link to="/login" class="nav-link" eventKey="link-1">
         <li class="nav-item" onClick={() => {
             auth.logout()
