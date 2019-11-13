@@ -5,8 +5,9 @@ import validateAuth from "../validateAuth";
 import styled from 'styled-components'
 
 
-function Login() {
+function Login(props) {
   const {
+    handleLogin,
     handleSubmit,
     handleNameChange,
     handleEmailChange,
@@ -22,25 +23,22 @@ function Login() {
     passwordInput,
     password2Input,
     nameInput
-  } = useFormValidation(validateAuth);
-  // const [email, setEmail] = React.useState("");
-  // const [password, setPassword] = React.useState("");
-
-//console.log(email);
+  } = useFormValidation(validateAuth, props);
   return (
     <StyledLogin>
     <div className="container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
 
       <p class={emailInput.p1}>
       <input
       onChange={handleEmailChange}
-      class={emailInput.input == null ? "form-control mr-sm-2": emailInput.input}
+      class="form-control mr-sm-2"
       type="text"
       name="email"
       placeholder="Enter Email"
       value={email}
+      id="email"
       />
         <p class="invalid-feedback">{emailInput.msg}</p>
       </p>
@@ -48,7 +46,7 @@ function Login() {
       <p class={passwordInput.p1}>
       <input
       onChange={handlePasswordChange}
-      class={passwordInput.input == null ? "form-control mr-sm-2": passwordInput.input}
+      class="form-control mr-sm-2"
       type="password"
       name="password"
       placeholder="Enter Password"

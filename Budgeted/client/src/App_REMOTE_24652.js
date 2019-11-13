@@ -37,6 +37,7 @@ function App() {
         {sidebar}
         <Toggle click = {openHandler}/>
       </Fragment>
+
       <Switch>
         <PublicRoute path="/" exact component={Users}/>
         <PublicRoute path="/login" component={Login}/>

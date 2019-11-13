@@ -5,7 +5,7 @@ import validateAuth from "../validateAuth";
 import styled from 'styled-components'
 
 
-function Register() {
+function Register(props) {
   const {
     handleSubmit,
     handleNameChange,
@@ -22,7 +22,7 @@ function Register() {
     passwordInput,
     password2Input,
     nameInput
-  } = useFormValidation(validateAuth);
+  } = useFormValidation(validateAuth, props);
   // const [email, setEmail] = React.useState("");
   // const [password, setPassword] = React.useState("");
 
@@ -41,6 +41,7 @@ function Register() {
       name="name"
       placeholder="Enter Name"
       value={name}
+      id="name"
       />
     </p>
       <p class={emailInput.p1}>
@@ -51,6 +52,7 @@ function Register() {
       name="email"
       placeholder="Enter Email"
       value={email}
+      id="email"
       />
         <p class="invalid-feedback">{emailInput.msg}</p>
       </p>
@@ -76,6 +78,7 @@ function Register() {
       name="password2"
       placeholder="Re-enter Password"
       value={password2}
+      id="p2"
       />
       <p class="invalid-feedback">{password2Input.msg}</p>
     </p>

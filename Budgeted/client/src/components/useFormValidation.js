@@ -1,6 +1,11 @@
 import React from "react";
+import axios from 'axios';
+import {useRoutes, useRedirect} from 'hookrouter';
+import { browserHistory } from 'react-router';
+import auth from './auth'
 
-function useFormValidation(validate) {
+
+function useFormValidation(validate, props) {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -12,18 +17,22 @@ function useFormValidation(validate) {
   const [password2Input, setPassword2Input] = React.useState({});
   const [nameInput, setNameInput] = React.useState({});
 
-  // React.useEffect(() => {
-  //   // if (isSubmitting) {
-  //   //   const noErrors = Object.keys(errors).length === 0;
-  //   //   if (noErrors) {
-  //   //     console.log("authenticated!", email, password);
-  //   //     setSubmitting(false);
-  //   //   } else {
-  //   //     setSubmitting(false);
-  //   //   }
-  //   // }
-  //   console.log(emailInput);
-  // }, [email,emailInput]);
+  React.useEffect(() => {
+    // const user = {
+    //   email: document.getElementById("email").value,
+    //   password: document.getElementById("p1").value,
+    //   password2:document.getElementById("p2").value,
+    //   name:document.getElementById("name").value
+    // }
+    //
+    // console.log(user);
+    //
+    // const validationErrors = validate(user);
+    // setErrors(validationErrors);
+
+
+
+  }, []);
 
   function handleNameChange(event){
     setName(event.target.value);
@@ -51,8 +60,8 @@ function useFormValidation(validate) {
       email:event.target.value
     }
 
-    let errors = (validate(values));
-    if(errors.email){
+    let error = (validate(values));
+    if(error.email){
         emailState  = {
         p1:"form-group has-danger",
         input:"form-control mr-sm-2 is-invalid",
@@ -68,7 +77,6 @@ function useFormValidation(validate) {
       msg:errors.email
     }
     }
-    setErrors(errors);
     setEmailInput(emailState);
     setEmail(event.target.value);
 
@@ -79,8 +87,8 @@ function useFormValidation(validate) {
     const values = {
       password:event.target.value,
     }
-    let errors = (validate(values));
-    if(errors.password){
+    let error = (validate(values));
+    if(error.password){
         p1State  = {
         p1:"form-group has-danger",
         input:"form-control mr-sm-2 is-invalid",
@@ -96,7 +104,6 @@ function useFormValidation(validate) {
       msg:errors.email
     }
     }
-    setErrors(errors);
     setPasswordInput(p1State);
     setPassword(event.target.value);
   }
@@ -106,19 +113,14 @@ function useFormValidation(validate) {
       password:document.getElementById("p1").value,
       password2:event.target.value
     }
-    let errors = (validate(values));
+    let error = (validate(values));
 
-    const validationErrors = validate(values);
-
-
-
-    //console.log(errors);
-    if(errors.password2){
+    if(error.password2){
         p2State  = {
         p1:"form-group has-danger",
         input:"form-control mr-sm-2 is-invalid",
         p2:"invalid-feedback",
-        msg:errors.password2
+        msg:error.password2
       }
 
     }
@@ -127,29 +129,72 @@ function useFormValidation(validate) {
       p1:"form-group  has-success",
       input:"form-control mr-sm-2 is-valid",
       p2:"valid-feedback",
-      msg:errors.email
+      msg:error.email
     }
     }
-    setErrors(validationErrors);
     setPassword2Input(p2State);
-      setPassword2(event.target.value);
+    setPassword2(event.target.value);
   }
 
 
   function handleSubmit(event) {
-    const values = {
-      email: email,
-      password: password,
-      password2:password2
-    }
     event.preventDefault();
-    const validationErrors = validate(values);
-    setErrors(validationErrors);
-    setSubmitting(true);
-    console.log(errors);
+    const url = '/user/register';
+    const user = {
+      email: document.getElementById("email").value,
+      password: document.getElementById("p1").value,
+      password2:document.getElementById("p2").value,
+      name:document.getElementById("name").value
+    }
+
+    let error = validate(user);
+
+    if(Object.entries(error).length === 0 && error.constructor === Object){
+      axios.post(url, user)
+      .then(res =>{
+        if(res.data.success){
+          props.history.push('/login');
+        }
+      })
+    } else {
+      console.log(error);
+    }
+
   }
 
+  function handleLogin(event) {
+    event.preventDefault();
+    const url = '/user/authenticate';
+    const user = {
+      email: document.getElementById("email").value,
+      password: document.getElementById("p1").value,
+    }
+
+
+      axios.post(url, user)
+      .then(res =>{
+        if(res.data.success){
+          auth.login(() =>{
+            console.log(res.data);
+              localStorage.setItem('token', res.data.token);
+              localStorage.setItem('userData', JSON.stringify(res.data));
+              auth.isAuthenticated();
+
+          })
+          window.location.reload();
+
+
+
+        }
+      })
+  }
+
+
+
+
+
   return {
+    handleLogin,
     handleSubmit,
     handleNameChange,
     handleEmailChange,
