@@ -34,7 +34,7 @@ div{
 hr {
   color:white;
   background-color:white;
-  width:80%;
+  width:90%;
   margin-bottom:0px;
 }
 
@@ -42,11 +42,11 @@ hr {
   position: relative;
 }
 
-.graph {
+/* .graph {
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-}
+} */
 .cancelbtn {
   width: auto;
   padding: 10px 18px;
@@ -62,8 +62,8 @@ hr {
 .child {
     margin-top:0px;
     margin-bottom:0px;
-    padding-left: 10%;
-    padding-right:10%;
+    padding-left: 20%;
+    padding-right:20%;
     display: table-cell;
     max-height:10px;
     display:inline-block;
