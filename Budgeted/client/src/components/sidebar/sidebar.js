@@ -1,28 +1,34 @@
-import React, { useState } from "react"
+import React, {useState} from "react"
 import {StyledSidebar} from './sidebar.styled.js'
 
-const Sidebar = (props) => {
+  const Sidebar = (props) => {
   const [sidebarClass, setSidebarClass] = useState(props.sidebar)
   const closeHandler = (e) => {
     e.preventDefault()
     setSidebarClass("sidebar close")
     props.close()
   }
-  return (
-    <StyledSidebar>
-      <div className={sidebarClass}>
+  return (<StyledSidebar>
+    <div className={sidebarClass}>
+      <a class="closebtn" onClick={closeHandler}>
+        &times;
+      </a>
       <div className="btn-group">
-        <a button="#close" onClick ={closeHandler}>
-          &times;close
+        <a button="button">
+          Balance
         </a>
-        <a button> Balance </a>
-        <a button> Daily Budget </a>
-        <a button> Transactions </a>
-        <a button> Analysis </a>
-        </div></div>
-    </StyledSidebar>
-
-  )
+        <a button="button">
+          Daily Budget
+        </a>
+        <a button="button">
+          Transactions
+        </a>
+        <a button="button">
+          Analysis
+        </a>
+      </div>
+    </div>
+  </StyledSidebar>)
 }
 
 export default Sidebar

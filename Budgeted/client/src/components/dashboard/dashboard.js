@@ -23,14 +23,20 @@ function Dashboard() {
 
   }, [])
 
-  function initializeChart() {
+    function initializeChart() {
     Chart.defaults.global.defaultFontColor = 'white';
     Chart.defaults.global.legend.display = false;
     setChartData({
       labels: [
-        ['Today', '$$$'],
-        ['Monday', '$$$'],
-        ['Tuesday', '$$$'],
+        [
+          'Today', '$$$'
+        ],
+        [
+          'Monday', '$$$'
+        ],
+        [
+          'Tuesday', '$$$'
+        ]
       ],
       datasets: [
         {
@@ -88,8 +94,7 @@ function Dashboard() {
               ]
             }
 
-          }}
-          />
+          }}/>
 
       </div>
 
