@@ -1,241 +1,247 @@
-CREATE DATABASE budgetedDB;
-CREATE TABLE accounts (accountId INT(10) UNIQUE NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-name VARCHAR(10), 
-email VARCHAR(45), 
-password VARCHAR(32));
+-- MySQL Workbench Forward Engineering
 
-INSERT INTO accounts (name, email, password) VALUES ('Tuong', 'tuong@gmail.com', 'password123');
-SELECT * from accounts;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
 
-CREATE TABLE `budgeteddb`.`analysis` (
-`analysisID` INT NOT NULL,
-`timePeriod` VARCHAR(45) NOT NULL,
-`surplus` VARCHAR(45) NOT NULL,
-`accumulatedSaving` VARCHAR(45) NOT NULL,
-PRIMARY KEY (`analysisID`));
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
 
-CREATE TABLE `budgeteddb`.`analysisusestrans&budget` (
-`analysisID` INT NOT NULL,
-`transactionID` VARCHAR(45) NOT NULL,
-`budgetIDd` VARCHAR(45) NOT NULL);
+-- -----------------------------------------------------
+-- Table `mydb`.`accounts`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`accounts` (
+  `accountID` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
+  `email` VARCHAR(45) NULL,
+  `password` VARCHAR(45) NULL,
+  `accountscol` VARCHAR(100) NULL,
+  PRIMARY KEY (`accountID`))
+ENGINE = InnoDB;
 
-CREATE TABLE `budgeteddb`.`budget` (
-`budgetID` INT NOT NULL,
-`savingAcct` VARCHAR(45) NOT NULL,
-`balance` VARCHAR(45) NOT NULL,
-`` VARCHAR(45) NULL,
-PRIMARY KEY (`budgetID`));
 
-CREATE TABLE `budgeteddb`.`budgethasexpenses&income` (
-`budgetID` INT NOT NULL,
-`incomeID` VARCHAR(45) NOT NULL,
-`expenseID` VARCHAR(45) NOT NULL);
+-- -----------------------------------------------------
+-- Table `mydb`.`budget`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`budget` (
+  `budgetID` INT NOT NULL AUTO_INCREMENT,
+  `balance` INT NULL,
+  `daily_budge` INT NULL,
+  `savingPercentage` INT NULL,
+  PRIMARY KEY (`budgetID`))
+ENGINE = InnoDB;
 
-CREATE TABLE `budgeteddb`.`expenses` (
-`expenseID` INT NOT NULL,
-`type` VARCHAR(45) NOT NULL,
-`amount` VARCHAR(45) NOT NULL,
-`` VARCHAR(45) NULL,
-PRIMARY KEY (`expenseID`));
 
-CREATE TABLE `budgeteddb`.`income` (
-`incomeID` INT NOT NULL,
-`type` VARCHAR(45) NOT NULL,
-`amount` VARCHAR(45) NOT NULL,
-`` VARCHAR(45) NULL,
-PRIMARY KEY (`incomeID`));
+-- -----------------------------------------------------
+-- Table `mydb`.`transactions`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`transactions` (
+  `transactionID` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NULL,
+  `date` DATE NULL,
+  `amount` INT NULL,
+  PRIMARY KEY (`transactionID`))
+ENGINE = InnoDB;
 
-CREATE TABLE `budgeteddb`.`transactions` (
-`transactionID` INT NOT NULL,
-`date` VARCHAR(45) NOT NULL,
-`type` VARCHAR(45) NOT NULL,
-`amount` VARCHAR(45) NOT NULL,
-PRIMARY KEY (`transactionID`));
 
-CREATE TABLE `budgeteddb`.`userhasbudget` (
-`userID` INT NOT NULL,
-`budgetID` VARCHAR(45) NOT NULL);
+-- -----------------------------------------------------
+-- Table `mydb`.`income`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`income` (
+  `incomeID` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NULL,
+  `amount` INT NULL,
+  PRIMARY KEY (`incomeID`))
+ENGINE = InnoDB;
 
-CREATE TABLE `budgeteddb`.`usermakestransactions1` (
-`userID` INT NOT NULL,
-`budgetID` VARCHAR(45) NOT NULL);
 
-CREATE TABLE `budgeteddb`.`user` (
-`userID` INT NOT NULL,
-`name` VARCHAR(45) NOT NULL,
-`email` VARCHAR(45) NOT NULL,
-`password` VARCHAR(45) NOT NULL,
-PRIMARY KEY (`userID`));
+-- -----------------------------------------------------
+-- Table `mydb`.`expenses`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`expenses` (
+  `expenseID` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NULL,
+  `amount` INT NULL,
+  PRIMARY KEY (`expenseID`))
+ENGINE = InnoDB;
 
-Tuples
-users
-INSERT users(userID, name, email, password) VALUES ('1001', 'Tuong', 'Tuong@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1002', 'Marcus', 'Marcus@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1003', 'Stephen', 'Stephen@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1004', 'David', 'David@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1005', 'Susan', 'Susan@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1006', 'John', 'John@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1007', 'Peter', 'Peter@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1008', 'Steve', 'Steve@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1009', 'Aaron', 'aaron@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1010', 'Logan', 'logan@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1011', 'Jackie', 'jackie@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1012', 'grace', 'grace@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1013', 'Apple', 'apple@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1014', 'Angel', 'Angel@gmail.com', 'password123');
-INSERT users(userID, name, email, password) VALUES ('1015', 'Orange', 'Orange@gmail.com', 'password123');
 
-transactions
-INSERT transactions(transactionID, date, type, amount) VALUES ('2001', '10-10-2019', 'Income', '30');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2002', '10-10-2019', 'Expenses', '30');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2003', '10-11-2019', 'Income', '20');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2004', '10-11-2019', 'Expenses', '20');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2005', '10-11-2019', 'Income', '50');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2006', '10-12-2019', 'Expenses', '30');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2007', '10-12-2019', 'Expenses', '20');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2008', '10-13-2019', 'Income', '70');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2009', '10-13-2019', 'Saving', '70');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2010', '10-14-2019', 'Expenses', '30');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2011', '10-14-2019', 'Expenses', '20');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2012', '10-15-2019', 'Income', '50');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2013', '10-16-2019', 'Income', '50');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2014', '10-17-2019', 'Expenses', '30');
-INSERT transactions(transactionID, date, type, amount) VALUES ('2015', '10-18-2019', 'Income', '60');
+-- -----------------------------------------------------
+-- Table `mydb`.`analysis`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`analysis` (
+  `analysisID` INT NOT NULL AUTO_INCREMENT,
+  `timeperiod` VARCHAR(45) NULL,
+  `overdraft` INT NULL,
+  `surplus` INT NULL,
+  PRIMARY KEY (`analysisID`))
+ENGINE = InnoDB;
 
-usermakesTransactions
-INSERT usermakestransactions(userID, transactionID) VALUES ('1001', '2001');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1002', '2002');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1003', '2003');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1004', '2004');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1005', '2005');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1006', '2006');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1007', '2007');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1008', '2008');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1009', '2009');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1010', '2010');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1011', '2011');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1012', '2012');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1013', '2013');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1014', '2014');
-INSERT usermakestransactions(userID, transactionID) VALUES ('1015', '2015');
 
-budget
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3001', '0', '30');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3002', '0', '0');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3003', '0', '20');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3004', '0', '0');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3005', '0', '50');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3006', '0', '20');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3007', '0', '0');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3008', '0', '70');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3009', '70', '70');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3010', '70', '40');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3011', '70', '20');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3012', '70', '70');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3013', '70', '120');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3014', '70', '90');
-INSERT budget(budgetID, savingAcct, balance) VALUES ('3015', '70', '150');
+-- -----------------------------------------------------
+-- Table `mydb`.`transactions_budget`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`transactions_budget` (
+  `transactions_transactionID` INT NOT NULL,
+  `budget_budgetID` INT NOT NULL,
+  PRIMARY KEY (`transactions_transactionID`, `budget_budgetID`),
+  INDEX `fk_transactions_has_budget_budget1_idx` (`budget_budgetID` ASC) VISIBLE,
+  INDEX `fk_transactions_has_budget_transactions1_idx` (`transactions_transactionID` ASC) VISIBLE,
+  CONSTRAINT `fk_transactions_has_budget_transactions1`
+    FOREIGN KEY (`transactions_transactionID`)
+    REFERENCES `mydb`.`transactions` (`transactionID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_transactions_has_budget_budget1`
+    FOREIGN KEY (`budget_budgetID`)
+    REFERENCES `mydb`.`budget` (`budgetID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
-budgethasexpense_income
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3001', '4101', '3201');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3002', '4102', '3202');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3003', '4103', '3203');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3004', '4104', '3204');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3005', '4105', '3205');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3006', '4106', '3206');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3007', '4107', '3207');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3008', '4108', '3208');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3009', '4109', '3209');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3010', '4110', '3210');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3011', '4111', '3211');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3012', '4112', '3212');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3013', '4113', '3213');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3014', '4114', '3214');
-INSERT budgethasexpense_income(budgetID, incomeID, expenseID) VALUES ('3015', '4115', '3215');
 
-expenses
-INSERT expenses(expenseID, type, amount) VALUE ('3201', 'netflix rental', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3202', 'breakfast', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3203', 'lunch', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3204', 'dinner', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3205', 'snack', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3206', 'water', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3207', 'breakfast', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3208', 'lunch', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3209', 'dinner', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3210', 'water', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3211', 'snack', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3212', 'breakfast', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3213', 'lunch', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3214', 'dinner', '30');
-INSERT expenses(expenseID, type, amount) VALUE ('3215', 'snack', '30');
+-- -----------------------------------------------------
+-- Table `mydb`.`budget_analysis`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`budget_analysis` (
+  `budget_budgetID` INT NOT NULL,
+  `analysis_analysisID` INT NOT NULL,
+  PRIMARY KEY (`budget_budgetID`, `analysis_analysisID`),
+  INDEX `fk_budget_has_analysis_analysis1_idx` (`analysis_analysisID` ASC) VISIBLE,
+  INDEX `fk_budget_has_analysis_budget1_idx` (`budget_budgetID` ASC) VISIBLE,
+  CONSTRAINT `fk_budget_has_analysis_budget1`
+    FOREIGN KEY (`budget_budgetID`)
+    REFERENCES `mydb`.`budget` (`budgetID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_budget_has_analysis_analysis1`
+    FOREIGN KEY (`analysis_analysisID`)
+    REFERENCES `mydb`.`analysis` (`analysisID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
-income
-INSERT income(incomeID, type, amount) VALUE ('4101', 'income', '30');
-INSERT income(incomeID, type, amount) VALUE ('4102', 'paycheck', '30');
-INSERT income(incomeID, type, amount) VALUE ('4103', 'paycheck', '30');
-INSERT income(incomeID, type, amount) VALUE ('4104', 'paycheck', '30');
-INSERT income(incomeID, type, amount) VALUE ('4105', 'paycheck', '30');
-INSERT income(incomeID, type, amount) VALUE ('4106', 'paycheck', '30');
-INSERT income(incomeID, type, amount) VALUE ('4107', 'investement', '30');
-INSERT income(incomeID, type, amount) VALUE ('4108', 'paycheck', '30');
-INSERT income(incomeID, type, amount) VALUE ('4109', 'paycheck', '30');
-INSERT income(incomeID, type, amount) VALUE ('4110', 'paycheck', '30');
-INSERT income(incomeID, type, amount) VALUE ('4111', 'paycheck', '30');
-INSERT income(incomeID, type, amount) VALUE ('4112', 'paycheck', '30');
-INSERT income(incomeID, type, amount) VALUE ('4113', 'investement', '30');
-INSERT income(incomeID, type, amount) VALUE ('4114', 'investement', '30');
-INSERT income(incomeID, type, amount) VALUE ('4115', 'investement', '30');
 
-userhasbudget
-INSERT userhasbudget(userID, BudgetID) VALUE ('1001', '3001');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1002', '3002');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1003', '3003');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1004', '3004');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1005', '3005');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1006', '3006');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1007', '3007');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1008', '3008');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1009', '3009');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1010', '3010');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1011', '3011');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1012', '3012');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1013', '3013');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1014', '3014');
-INSERT userhasbudget(userID, BudgetID) VALUE ('1015', '3015');
+-- -----------------------------------------------------
+-- Table `mydb`.`transactions_analysis`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`transactions_analysis` (
+  `transactions_transactionID` INT NOT NULL,
+  `analysis_analysisID` INT NOT NULL,
+  PRIMARY KEY (`transactions_transactionID`, `analysis_analysisID`),
+  INDEX `fk_transactions_has_analysis_analysis1_idx` (`analysis_analysisID` ASC) VISIBLE,
+  INDEX `fk_transactions_has_analysis_transactions1_idx` (`transactions_transactionID` ASC) VISIBLE,
+  CONSTRAINT `fk_transactions_has_analysis_transactions1`
+    FOREIGN KEY (`transactions_transactionID`)
+    REFERENCES `mydb`.`transactions` (`transactionID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_transactions_has_analysis_analysis1`
+    FOREIGN KEY (`analysis_analysisID`)
+    REFERENCES `mydb`.`analysis` (`analysisID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
-analysisuserstrans_budget
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5001', '2001', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5002', '2002', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5003', '2003', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5004', '2004', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5005', '2005', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5006', '2006', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5007', '2007', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5008', '2008', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5009', '2009', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5010', '2010', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5011', '2011', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5012', '2012', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5013', '2013', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5014', '2014', '3001');
-INSERT analysisusestrans_budget(analysisID, transactionID, budgetID) VALUE ('5015', '2015', '3001');
 
-analysis
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5001', 'Daily', '30' , '0');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5002', 'Weekly', '30' , '0');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5003', 'Monthly', '50' , '0');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5004', 'Daily', '0' , '20');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5005', 'Monthly', '30' , '0');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5006', 'Weeky', '0' , '50');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5007', 'Daily', '30' , '0');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5008', 'Weekly', '0' , '10');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5009', 'Monthly', '30' , '0');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5010', 'Daily', '30' , '0');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5011', 'Daily', '0' , '40');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5012', 'Weekly', '30' , '0');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5013', 'Monthly', '0' , '50');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5014', 'Daily', '0' , '20');
-INSERT analysis(analysisID, timeperiod, surplus, overdraft) VALUE ('5015', 'Weekly', '50' , '0');
+-- -----------------------------------------------------
+-- Table `mydb`.`account_budget`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`account_budget` (
+  `accounts_accountID` INT NOT NULL,
+  `budget_budgetID` INT NOT NULL,
+  INDEX `fk_account_budget_accounts1_idx` (`accounts_accountID` ASC) VISIBLE,
+  INDEX `fk_account_budget_budget1_idx` (`budget_budgetID` ASC) VISIBLE,
+  CONSTRAINT `fk_account_budget_accounts1`
+    FOREIGN KEY (`accounts_accountID`)
+    REFERENCES `mydb`.`accounts` (`accountID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_account_budget_budget1`
+    FOREIGN KEY (`budget_budgetID`)
+    REFERENCES `mydb`.`budget` (`budgetID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`budget_income_expenses`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`budget_income_expenses` (
+  `budget_budgetID` INT NOT NULL,
+  `income_incomeID` INT NOT NULL,
+  `expenses_expenseID` INT NOT NULL,
+  INDEX `fk_table1_budget1_idx` (`budget_budgetID` ASC) VISIBLE,
+  INDEX `fk_table1_income1_idx` (`income_incomeID` ASC) VISIBLE,
+  INDEX `fk_table1_expenses1_idx` (`expenses_expenseID` ASC) VISIBLE,
+  CONSTRAINT `fk_table1_budget1`
+    FOREIGN KEY (`budget_budgetID`)
+    REFERENCES `mydb`.`budget` (`budgetID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_table1_income1`
+    FOREIGN KEY (`income_incomeID`)
+    REFERENCES `mydb`.`income` (`incomeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_table1_expenses1`
+    FOREIGN KEY (`expenses_expenseID`)
+    REFERENCES `mydb`.`expenses` (`expenseID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`account_transactions`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`account_transactions` (
+  `accounts_accountID` INT NOT NULL,
+  `transactions_transactionID` INT NOT NULL,
+  INDEX `fk_table2_accounts1_idx` (`accounts_accountID` ASC) VISIBLE,
+  INDEX `fk_table2_transactions1_idx` (`transactions_transactionID` ASC) VISIBLE,
+  CONSTRAINT `fk_table2_accounts1`
+    FOREIGN KEY (`accounts_accountID`)
+    REFERENCES `mydb`.`accounts` (`accountID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_table2_transactions1`
+    FOREIGN KEY (`transactions_transactionID`)
+    REFERENCES `mydb`.`transactions` (`transactionID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`account_analysis`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`account_analysis` (
+  `accounts_accountID` INT NOT NULL,
+  `analysis_analysisID` INT NOT NULL,
+  INDEX `fk_account_analysis_accounts1_idx` (`accounts_accountID` ASC) VISIBLE,
+  INDEX `fk_account_analysis_analysis1_idx` (`analysis_analysisID` ASC) VISIBLE,
+  CONSTRAINT `fk_account_analysis_accounts1`
+    FOREIGN KEY (`accounts_accountID`)
+    REFERENCES `mydb`.`accounts` (`accountID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_account_analysis_analysis1`
+    FOREIGN KEY (`analysis_analysisID`)
+    REFERENCES `mydb`.`analysis` (`analysisID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
