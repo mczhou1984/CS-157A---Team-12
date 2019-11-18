@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import "./sidebar.css"
+import {StyledSidebar} from './sidebar.styled.js'
 
 const Sidebar = (props) => {
   const [sidebarClass, setSidebarClass] = useState(props.sidebar)
@@ -9,16 +9,19 @@ const Sidebar = (props) => {
     props.close()
   }
   return (
-    <div className={sidebarClass}>
-    <div className="btn-group">
-      <a button="#close" onClick ={closeHandler}>
-        &times;close
-      </a>
-      <a button> Balance </a>
-      <a button> Daily Budget </a>
-      <a button> Transactions </a>
-      <a button> Analysis </a>
-      </div></div>
+    <StyledSidebar>
+      <div className={sidebarClass}>
+      <div className="btn-group">
+        <a button="#close" onClick ={closeHandler}>
+          &times;close
+        </a>
+        <a button> Balance </a>
+        <a button> Daily Budget </a>
+        <a button> Transactions </a>
+        <a button> Analysis </a>
+        </div></div>
+    </StyledSidebar>
+
   )
 }
 

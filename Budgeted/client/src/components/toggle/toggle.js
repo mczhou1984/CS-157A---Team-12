@@ -1,11 +1,14 @@
 import React, {Fragment} from "react"
-import "./toggle.css"
+import {StyledToggle} from "./toggle.styled.js"
 
  const Toggle = (props) => {
    return(
-     <Fragment>
-      <button id="toggle" onClick={props.click}>&#8801;</button>
-     </Fragment>
+     <StyledToggle>
+       <Fragment>
+        <button id="toggle" onClick={props.click}>&#8801;</button>
+       </Fragment>
+     </StyledToggle>
+
    )
  }
 

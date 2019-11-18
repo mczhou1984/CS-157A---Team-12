@@ -26,15 +26,6 @@ function Dashboard() {
   function initializeChart() {
     Chart.defaults.global.defaultFontColor = 'white';
     Chart.defaults.global.legend.display = false;
-    Chart.plugins.register({
-      beforeInit: function(chart) {
-    chart.data.labels.forEach(function(e, i, a) {
-       if (/\n/.test(e)) {
-          a[i] = e.split(/\n/);
-       }
-    });
- }
-});
     setChartData({
       labels: [
         ['Today', '$$$'],
