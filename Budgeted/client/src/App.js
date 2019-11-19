@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react'
+import React, {Fragment, useState, useContext} from 'react'
 import './App.css'
 import Users from './components/users/users'
 import Nav from './components/nav/nav'
@@ -13,7 +13,14 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import {ProtectedRoute} from './components/protected.route'
 import {PublicRoute} from './components/public.route'
 
+
+
+
   function App() {
+
+
+
+
     let styles = {
       background: 'rgb(2,0,36)',
       background: 'linear-gradient(to bottom, #7db9e8 0%, #207cca 71%, #1e5799 100%)',
@@ -36,7 +43,6 @@ import {PublicRoute} from './components/public.route'
     <body style={styles}>
     <Router>
       <Nav/>
-
         {sidebar}
         <Toggle click={openHandler}/>
       <Switch>

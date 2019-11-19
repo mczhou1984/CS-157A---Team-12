@@ -8,6 +8,27 @@ form {
   display: inline-block
 
 }
+input[type=text], input[type=email], select {
+  width: 100%;
+  padding: 12px 10px;
+  margin: 5px 0;
+  display: inline-block;
+  border: none;
+  font-size:.75rem;
+  focus:grey;
+}
+
+button {
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
 
 #btn1, #btn2 {
   width: 50px;
@@ -18,6 +39,11 @@ form {
   line-height: 50px;
   text-align: center;
   font-size:20px;
+  font-color:white;
+  color:white;
+  border:1px solid white;
+  border-radius:8px;
+  background-color:transparent;
 }
 
 .divider{
@@ -26,22 +52,25 @@ form {
     display:inline-block;
 }
 
+.modal-contents {
+	height: 300px;
+	width: 500px;
+	background-color: white;
+	text-align: center;
+	padding: 20px;
+	position: relative;
+	border-radius: 4px;
+}
+
+
+
 
 .btnDiv{
   text-alignt:center;
   padding:50px;
 }
 
-input[type=text], input[type=password] {
-  width: 100%;
-  padding: 12px 10px;
-  margin: 5px 0;
-  display: inline-block;
-  border: none;
-  box-sizing: border-box;
-  font-size:.75rem;
-  focus:grey;
-}
+
 
 
 
@@ -103,23 +132,47 @@ hr {
   margin-top: 80px;
 }
 
+.bg-modal1, .bg-modal2{
+	background-color: rgba(0, 0, 0, .3);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	display: none;
+	justify-content: center;
+	align-items: center;
+}
+
+/* .bg-modal2{
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+} */
+
+
+.close {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	font-size: 42px;
+	color: #333;
+	transform: rotate(45deg);
+	cursor: pointer;
+	&:hover {
+		color: #666;
+	}
+}
+
 .container-top ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
-}
-
-.container-top li {
-  float: left;
-}
-
-.container-top ul li a {
-  display: block;
-  padding: 14px 16px;
-  text-align: center;
-  text-decoration: none;
-  color: #000;
 }
 
 .container-top ul li a:hover {
