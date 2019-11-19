@@ -11,12 +11,12 @@ function Dashboard() {
   useEffect(() => {
 
     //Authenticate user and get user Data
-    const tmp = JSON.parse(localStorage.getItem('userData'));
-    const url = '/user/dashboard';
-    axios.defaults.headers.common['Authorization'] = tmp.token;
-    axios.get(url).then(res => {
-      setUserData(res.data.user[0]);
-    })
+    // const tmp = JSON.parse(localStorage.getItem('userData'));
+    // const url = '/user/dashboard';
+    // axios.defaults.headers.common['Authorization'] = tmp.token;
+    // axios.get(url).then(res => {
+    //   setUserData(res.data.user[0]);
+    // })
 
     //TODO:: axios calls to get graph Data
     initializeChart();
@@ -24,6 +24,9 @@ function Dashboard() {
   }, [])
 
     function initializeChart() {
+      const data = [10, -20, 40];
+      const colours = data.map((value) => value < 0 ? 'light-red' : 'white');
+
     Chart.defaults.global.defaultFontColor = 'white';
     Chart.defaults.global.legend.display = false;
     setChartData({
@@ -40,13 +43,13 @@ function Dashboard() {
       ],
       datasets: [
         {
-          backgroundColor: 'white',
+          backgroundColor:colours,
           borderColor: 'white',
           borderWidth: 0,
           borderSkipped: 'right',
           hoverBackgroundColor: 'white',
           hoverBorderColor: 'white',
-          data: [65, 59, 80]
+          data: data
         }
       ]
 
@@ -59,10 +62,10 @@ function Dashboard() {
 
       <h2>Hello {userData.name},</h2>
       <h2>Your Budget: $</h2>
-      <hr/>
 
       <div className="chart">
         <Bar data={chartData} options={{
+          responsive:true,
             legend: {
               display: false
             },
@@ -70,7 +73,7 @@ function Dashboard() {
               xAxes: [
                 {
                   scaleLabel: {
-                    display: true
+                    display: false
                   },
                   gridLines: {
                     display: false,
@@ -81,14 +84,18 @@ function Dashboard() {
               yAxes: [
                 {
                   ticks: {
-                    display: false
+                    display: false,
+                    autoSkip:true
                   },
                   scaleLabel: {
-                    display: true
+                    display: false
                   },
                   gridLines: {
-                    display: false,
-                    drawBorder: false //<- set this
+                    color: "transparent",
+                    display: true,
+                    drawBorder: false,
+                    zeroLineColor: "#ccc",
+                    zeroLineWidth: 1
                   }
                 }
               ]
@@ -96,6 +103,12 @@ function Dashboard() {
 
           }}/>
 
+      </div>
+
+      <div class="btnDiv">
+      <button type="submit" id="btn1" class="btn btn-primary"> + </button>
+      <div class="divider"/>
+      <button type="submit" id="btn2" class="btn btn-primary"> - </button>
       </div>
 
     </div>

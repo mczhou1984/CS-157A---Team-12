@@ -34,7 +34,9 @@
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
+    "chart.js": "^2.9.3",
     "hookrouter": "^1.2.3",
-    "jwt-decode": "^2.2.0"
+    "jwt-decode": "^2.2.0",
+    "react-chartjs-2": "^2.8.0"
   }
 }
