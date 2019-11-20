@@ -1,10 +1,111 @@
-import React, {useState, useEffect, useContext} from 'react';
-import axios from 'axios';
-import {StyledDashboard} from './dashboard.styled.js';
-import {Chart, Bar} from 'react-chartjs-2';
-import CurrencyInput from 'react-currency-input';
+import React, {useState, useEffect, useContext} from 'react'
+import axios from 'axios'
+import {StyledDashboard} from './dashboard.styled.js'
+import {Chart, Bar} from 'react-chartjs-2'
+import CurrencyInput from 'react-currency-input'
 //
 
+function hideModal1() {
+      document.getElementById("negInput").value = '-$0.00'
+  document.querySelector('.bg-modal1').style.display = "none"
+}
+function hideModal2() {
+  document.getElementById("posInput").value = '+$0.00'
+
+  document.querySelector('.bg-modal2').style.display = "none"
+}
+function showModal1() {
+
+  document.querySelector('.bg-modal1').style.display = "flex"
+
+}
+function showModal2() {
+
+  document.querySelector('.bg-modal2').style.display = "flex"
+
+}
+function handlePositiveTransaction(event){
+      event.preventDefault();
+  const tmp = JSON.parse(localStorage.getItem('userData'))
+  const url = '/user/transaction';
+  const dropdown = document.getElementById("category2")
+  const transaction = {
+    amount:+document.getElementById("posInput").value.substring(2).replace(",",""),
+    category:dropdown.options[dropdown.selectedIndex].value
+  }
+
+  console.log(transaction)
+  axios.defaults.headers.common['Authorization'] = tmp.token
+  axios.post(url, transaction).then(res => {
+    console.log(res)
+  })
+
+  hideModal2()
+}
+function handleNegativeTransaction(event){
+      event.preventDefault();
+  const tmp = JSON.parse(localStorage.getItem('userData'))
+  const url = '/user/transaction'
+      const dropdown = document.getElementById("category1")
+  const transaction = {
+    amount:-document.getElementById("negInput").value.substring(2).replace(",",""),
+    category:dropdown.options[dropdown.selectedIndex].value
+  }
+  console.log(transaction)
+
+  axios.defaults.headers.common['Authorization'] = tmp.token
+  axios.post(url, transaction).then(res => {
+    console.log(res)
+  })
+
+  hideModal1()
+}
+function Modal(){
+  return (
+    <StyledDashboard>
+    <div>
+    <div class="bg-modal1">
+      <div class="modal-contents">
+
+        <div class="close" onClick={hideModal1}>+</div>
+
+        <form onSubmit={handleNegativeTransaction}>
+          <select name="type" id="category1">
+            <option value="General">General</option>
+            <option value="Groceries">Groceries</option>
+            <option value="Household">Household</option>
+            <option value="Transportation">Transportation</option>
+          </select>
+          <CurrencyInput allowEmpty="false" id="negInput" class="form-control mr-sm-2" prefix="-$" value="0.00"/>
+          <input class="form-control mr-sm-2" type="text" value="Today" readonly="readonly"/>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+      </div>
+    </div>
+    <div class="bg-modal2">
+      <div class="modal-contents">
+
+        <div class="close" onClick={hideModal2}>+</div>
+
+        <form onSubmit={handlePositiveTransaction}>
+          <select name="type" id="category2">
+            <option value="Extra Income">Extra Income</option>
+            <option value="Investment">Investment</option>
+          </select>
+          <CurrencyInput allowEmpty="false" id="posInput" class="form-control mr-sm-2" prefix="+$" value="0.00"/>
+          <input class="form-control mr-sm-2" type="text" value="Today" readonly="readonly"/>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+      </div>
+    </div>
+    </div>
+</StyledDashboard>
+
+  )
+
+}
 function Dashboard() {
   //localStorage.clear();
   const [userData, setUserData] = useState({});
@@ -25,61 +126,8 @@ function Dashboard() {
 
   }, [])
 
-  function handlePositiveTransaction(event){
-        event.preventDefault();
-    const tmp = JSON.parse(localStorage.getItem('userData'))
-    const url = '/user/transaction';
-    const dropdown = document.getElementById("category2")
-    const transaction = {
-      amount:+document.getElementById("posInput").value.substring(2).replace(",",""),
-      category:dropdown.options[dropdown.selectedIndex].value
-    }
 
-    console.log(transaction)
-    axios.defaults.headers.common['Authorization'] = tmp.token
-    axios.post(url, transaction).then(res => {
-      console.log(res)
-    })
 
-    hideModal2()
-  }
-  function handleNegativeTransaction(event){
-        event.preventDefault();
-    const tmp = JSON.parse(localStorage.getItem('userData'))
-    const url = '/user/transaction'
-        const dropdown = document.getElementById("category1")
-    const transaction = {
-      amount:-document.getElementById("negInput").value.substring(2).replace(",",""),
-      category:dropdown.options[dropdown.selectedIndex].value
-    }
-    console.log(transaction)
-
-    axios.defaults.headers.common['Authorization'] = tmp.token
-    axios.post(url, transaction).then(res => {
-      console.log(res)
-    })
-
-    hideModal1()
-  }
-  function hideModal1() {
-        document.getElementById("negInput").value = '-$0.00'
-    document.querySelector('.bg-modal1').style.display = "none"
-  }
-  function hideModal2() {
-    document.getElementById("posInput").value = '+$0.00'
-
-    document.querySelector('.bg-modal2').style.display = "none"
-  }
-  function showModal1() {
-
-    document.querySelector('.bg-modal1').style.display = "flex"
-
-  }
-  function showModal2() {
-
-    document.querySelector('.bg-modal2').style.display = "flex"
-
-  }
   function initializeChart() {
     const data = [10, -20, 40];
     const colours = data.map(
@@ -178,43 +226,7 @@ function Dashboard() {
       </div>
 
     </div>
-    <div class="bg-modal1">
-      <div class="modal-contents">
-
-        <div class="close" onClick={hideModal1}>+</div>
-
-        <form onSubmit={handleNegativeTransaction}>
-          <select name="type" id="category1">
-            <option value="General">General</option>
-            <option value="Groceries">Groceries</option>
-            <option value="Household">Household</option>
-            <option value="Transportation">Transportation</option>
-          </select>
-          <CurrencyInput allowEmpty="false" id="negInput" class="form-control mr-sm-2" prefix="-$" value="0.00"/>
-          <input class="form-control mr-sm-2" type="text" value="Today" readonly="readonly"/>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-
-      </div>
-    </div>
-    <div class="bg-modal2">
-      <div class="modal-contents">
-
-        <div class="close" onClick={hideModal2}>+</div>
-
-        <form onSubmit={handlePositiveTransaction}>
-          <select name="type" id="category2">
-            <option value="Extra Income">Extra Income</option>
-            <option value="Investment">Investment</option>
-          </select>
-          <CurrencyInput allowEmpty="false" id="posInput" class="form-control mr-sm-2" prefix="+$" value="0.00"/>
-          <input class="form-control mr-sm-2" type="text" value="Today" readonly="readonly"/>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-
-      </div>
-    </div>
-  </StyledDashboard>);
+    </StyledDashboard>);
 }
 
-export default Dashboard;
+export  {Dashboard, Modal};

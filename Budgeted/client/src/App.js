@@ -6,9 +6,10 @@ import Register from './components/register/register'
 import Login from './components/login/login'
 import Home from './components/home/home'
 import Budget from './components/budget'
-import Dashboard from './components/dashboard/dashboard'
+import {Dashboard, Modal} from './components/dashboard/dashboard'
 import Sidebar from './components/sidebar/sidebar'
 import Toggle from './components/toggle/toggle'
+import Transactions from './components/transactions/transactions'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import {ProtectedRoute} from './components/protected.route'
 import {PublicRoute} from './components/public.route'
@@ -17,7 +18,6 @@ import {PublicRoute} from './components/public.route'
 
 
   function App() {
-
 
 
 
@@ -41,9 +41,12 @@ import {PublicRoute} from './components/public.route'
   }
   return (<header className="App-header">
     <body style={styles}>
+
     <Router>
       <Nav/>
-        {sidebar}
+              {sidebar}
+        <Modal/>
+
         <Toggle click={openHandler}/>
       <Switch>
         <PublicRoute path="/" exact="exact" component={Users}/>
@@ -51,6 +54,7 @@ import {PublicRoute} from './components/public.route'
         <PublicRoute path="/register" component={Register}/>
         <ProtectedRoute path="/dashboard" component={Dashboard}/>
         <ProtectedRoute path="/budget" component={Budget}/>
+        <ProtectedRoute path="/transactions" component={Transactions}/>
       </Switch>
     </Router>
     </body>
