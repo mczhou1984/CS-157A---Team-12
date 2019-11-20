@@ -26,6 +26,7 @@ function Dashboard() {
     function initializeChart() {
     Chart.defaults.global.defaultFontColor = 'white';
     Chart.defaults.global.legend.display = false;
+    Chart.defaults.global.responsive = true;
     setChartData({
       labels: [
         [
@@ -59,9 +60,10 @@ function Dashboard() {
 
       <h2>Hello {userData.name},</h2>
       <h2>Your Budget: $</h2>
-      <hr/>
+
 
       <div className="chart">
+              <hr/>
         <Bar data={chartData} options={{
             legend: {
               display: false
@@ -81,7 +83,8 @@ function Dashboard() {
               yAxes: [
                 {
                   ticks: {
-                    display: false
+                    display: false,
+                    beginAtZero:true
                   },
                   scaleLabel: {
                     display: true
