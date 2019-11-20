@@ -3,7 +3,8 @@ const config = {
   user: 'root',
   password:'password',
   database: 'budgeteddb',
-  secret: 'yoursecret'
+  secret: 'yoursecret',
+  multipleStatements: true
 };
 
 module.exports = config;

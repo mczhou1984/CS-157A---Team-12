@@ -54,7 +54,7 @@ console.log(auth.isAuthenticated())
 function Nav() {
 
   return (
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style={{zIndex:9999}}>
     <Link to="/" class="navbar-brand">Budgeted</Link>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>

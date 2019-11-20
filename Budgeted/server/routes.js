@@ -1,76 +1,118 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const mysql = require('mysql');
-const config = require('./config/database');
-const User = require('./models/user');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
+const mysql = require("mysql");
+const config = require("./config/database");
+const User = require("./models/user");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
 // require('./config/passport')(passport);
 
 const db = mysql.createConnection(config);
 
-
-router.get('/profile', (req, res) => {
-
-  let sql = 'SELECT accountId,name, email FROM accounts';
+router.get("/profile", (req, res) => {
+  let sql = "SELECT accountId,name, email FROM accounts";
   db.query(sql, (err, result) => {
     if (err) throw err;
     res.json(result);
-  })
-
-})
-router.post('/register', (req, res) => {
+  });
+});
+router.post("/register", (req, res) => {
   const user = req.body;
-  User.addUser(user, (err) => {
-  if(err){
-    res.json({success: false, msg:'Failed to register user'});
+  User.addUser(user, err => {
+    if (err) {
+      res.json({success: false, msg: "Failed to register user"});
+    } else {
+      res.json({success: true, msg: "User registered"});
+    }
+  });
+});
+
+router.get(
+  "/dashboard",
+  passport.authenticate("jwt", {session: false}),
+  (req, res, next) => {
+    res.json({user: req.user});
+  }
+);
+
+router.post("/transaction", verifyToken, (req, res) => {
+  jwt.verify(req.token, "yoursecret", (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      let id = authData.data[0].accountId;
+      let newTransaction = {
+        category: req.body.category,
+        amount: req.body.amount,
+        date: new Date()
+          .toJSON()
+          .slice(0, 10)
+          .replace(/-/g, "/")
+      };
+      //console.log(newTransaction);
+      User.addTransaction(id, newTransaction, err => {
+        if (err) {
+          res.json({success: false, msg: "Failed to add transaction"});
+        } else {
+          return res.json({success: true, msg: "Post added!"});
+        }
+      });
+    }
+  });
+});
+
+// Verify Token
+function verifyToken(req, res, next) {
+  // Get auth header value
+  const bearerHeader = req.headers["authorization"];
+  // Check if bearer is undefined
+  if (typeof bearerHeader !== "undefined") {
+    // Split at the space
+    const bearer = bearerHeader.split(" ");
+    // Get token from array
+    const bearerToken = bearer[1];
+    // Set the token
+    req.token = bearerToken;
+    // Next middleware
+    next();
   } else {
-    res.json({success: true, msg:'User registered'});
+    // Forbidden
+    res.sendStatus(403);
   }
-})
-})
+}
 
+router.post("/authenticate", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
 
-router.get('/dashboard', passport.authenticate('jwt', {session:false}), (req, res, next) => {
-  res.json({user: req.user});
-})
+  User.getUserByEmail(email, (err, user) => {
+    if (err) throw err;
+    if (user === undefined || user.length == 0) {
+      res.json({success: false, msg: "User not found"});
+    } else {
+      User.comparePassword(password, user[0].password, (err, isMatch) => {
+        if (err) throw err;
+        if (isMatch) {
+          const token = jwt.sign({data: user}, config.secret, {
+            expiresIn: 604800 // 1 week
+          });
 
-router.post('/authenticate', (req, res) => {
-const email = req.body.email;
-const password = req.body.password;
-
-User.getUserByEmail(email, (err, user) => {
-  if(err) throw err;
-
-  if(!user){
-    res.json({success: false, msg: 'User not found'});
-  }
-    User.comparePassword(password, user[0].password, (err, isMatch) => {
-      if(err) throw err;
-      if(isMatch){
-        const token = jwt.sign({data:user}, config.secret, {
-          expiresIn: 604800 // 1 week
-        });
-
-
-        res.json({
-          success: true,
-          token: 'Bearer '+token,
-          user: {
-            id: user[0].accountId,
-            name: user[0].name,
-            username: user[0].username
-          }
-        })
-      } else {
-        res.json({success: false, msg: 'Wrong password'});
-      }
-    })
-
-
-})
-
-})
+          res.json({
+            success: true,
+            token: "Bearer " + token,
+            user: {
+              id: user[0].accountId,
+              name: user[0].name,
+              username: user[0].username
+            }
+          });
+        } else {
+          res.json({success: false, msg: "Wrong password"});
+        }
+      });
+    }
+  });
+});
 
 module.exports = router;

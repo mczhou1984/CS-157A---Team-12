@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react'
+import React, {Fragment, useState, useContext} from 'react'
 import './App.css'
 import Users from './components/users/users'
 import Nav from './components/nav/nav'
@@ -13,10 +13,17 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import {ProtectedRoute} from './components/protected.route'
 import {PublicRoute} from './components/public.route'
 
+
+
+
   function App() {
+
+
+
+
     let styles = {
       background: 'rgb(2,0,36)',
-      background: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 8%, rgba(0,212,255,1) 100%)',
+      background: 'linear-gradient(to bottom, #7db9e8 0%, #207cca 71%, #1e5799 100%)',
       position:'relative',
 }
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -33,10 +40,9 @@ import {PublicRoute} from './components/public.route'
     sidebar = <Sidebar close={openHandler} sidebar={"sidebar"}/>
   }
   return (<header className="App-header">
-    <div style={styles}></div>
+    <body style={styles}>
     <Router>
       <Nav/>
-
         {sidebar}
         <Toggle click={openHandler}/>
       <Switch>
@@ -47,7 +53,9 @@ import {PublicRoute} from './components/public.route'
         <ProtectedRoute path="/budget" component={Budget}/>
       </Switch>
     </Router>
-  </header>);
+    </body>
+  </header>
+);
 }
 
 export default App;
