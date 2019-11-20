@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import {StyledDashboard} from './dashboard.styled.js'
 import {Chart, Bar} from 'react-chartjs-2'
@@ -46,7 +46,7 @@ function handleNegativeTransaction(event){
       event.preventDefault();
   const tmp = JSON.parse(localStorage.getItem('userData'))
   const url = '/user/transaction'
-      const dropdown = document.getElementById("category1")
+  const dropdown = document.getElementById("category1")
   const transaction = {
     amount:-document.getElementById("negInput").value.substring(2).replace(",",""),
     category:dropdown.options[dropdown.selectedIndex].value
@@ -64,10 +64,10 @@ function Modal(){
   return (
     <StyledDashboard>
     <div>
-    <div class="bg-modal1">
-      <div class="modal-contents">
+    <div className="bg-modal1">
+      <div className="modal-contents">
 
-        <div class="close" onClick={hideModal1}>+</div>
+        <div className="close" onClick={hideModal1}>+</div>
 
         <form onSubmit={handleNegativeTransaction}>
           <select name="type" id="category1">
@@ -76,26 +76,26 @@ function Modal(){
             <option value="Household">Household</option>
             <option value="Transportation">Transportation</option>
           </select>
-          <CurrencyInput allowEmpty="false" id="negInput" class="form-control mr-sm-2" prefix="-$" value="0.00"/>
-          <input class="form-control mr-sm-2" type="text" value="Today" readonly="readonly"/>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <CurrencyInput allowEmpty={false} id="negInput" className="form-control mr-sm-2" prefix="-$" value="0.00"/>
+          <input className="form-control mr-sm-2" type="text" value="Today" readOnly/>
+          <button type="submit" className="btn btn-primary">Submit</button>
         </form>
 
       </div>
     </div>
-    <div class="bg-modal2">
-      <div class="modal-contents">
+    <div className="bg-modal2">
+      <div className="modal-contents">
 
-        <div class="close" onClick={hideModal2}>+</div>
+        <div className="close" onClick={hideModal2}>+</div>
 
         <form onSubmit={handlePositiveTransaction}>
           <select name="type" id="category2">
             <option value="Extra Income">Extra Income</option>
             <option value="Investment">Investment</option>
           </select>
-          <CurrencyInput allowEmpty="false" id="posInput" class="form-control mr-sm-2" prefix="+$" value="0.00"/>
-          <input class="form-control mr-sm-2" type="text" value="Today" readonly="readonly"/>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <CurrencyInput allowEmpty={false} id="posInput" className="form-control mr-sm-2" prefix="+$" value="0.00"/>
+          <input className="form-control mr-sm-2" type="text" value="Today" readOnly/>
+          <button type="submit" className="btn btn-primary">Submit</button>
         </form>
 
       </div>
@@ -110,7 +110,6 @@ function Dashboard() {
   //localStorage.clear();
   const [userData, setUserData] = useState({});
   const [chartData, setChartData] = useState({});
-  const [balance, setBalance] = useState(0);
   useEffect(() => {
 
   //  Authenticate user and get user Data
@@ -167,7 +166,7 @@ function Dashboard() {
   }
 
   return (<StyledDashboard>
-    <div class="container">
+    <div className="container">
 
       <h2>Hello {userData.name},</h2>
       <h2>Your Budget: $</h2>
@@ -215,12 +214,12 @@ function Dashboard() {
 
       </div>
 
-      <div class="btnDiv">
-        <button type="submit" id="btn1" class="button" onClick={showModal2}>
+      <div className="btnDiv">
+        <button type="submit" id="btn1" className="button" onClick={showModal2}>
           +
         </button>
-        <div class="divider"/>
-        <button type="submit" id="btn2" class="button" onClick={showModal1}>
+        <div className="divider"/>
+        <button type="submit" id="btn2" className="button" onClick={showModal1}>
           -
         </button>
       </div>

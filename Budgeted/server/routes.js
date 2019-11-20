@@ -55,12 +55,36 @@ router.post("/transaction", verifyToken, (req, res) => {
         if (err) {
           res.json({success: false, msg: "Failed to add transaction"});
         } else {
-          return res.json({success: true, msg: "Post added!"});
+          return res.json({success: true, msg: "Transaction added!"});
         }
       });
     }
   });
 });
+
+
+router.get(
+  "/transactions",
+  passport.authenticate("jwt", {session: false}),
+  (req, res, next) => {
+    console.log(req.user[0].accountId);
+    let user_id = req.user[0].accountId;
+    User.getTransactionsById(user_id, (err, transactions) =>{
+      if (err){
+        res.json({
+          success:false,
+          msg:"Failed to get Transaction history"
+        })
+      } else {
+        res.json({
+          success:true,
+          transactions:transactions
+        })
+      }
+    });
+
+  }
+);
 
 // Verify Token
 function verifyToken(req, res, next) {

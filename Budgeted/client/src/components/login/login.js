@@ -1,28 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {StyledLogin} from './login.styled.js';
 import useFormValidation from "../useFormValidation";
 import validateAuth from "../validateAuth";
-import styled from 'styled-components'
+
 
 
 function Login(props) {
   const {
     handleLogin,
-    handleSubmit,
-    handleNameChange,
     handleEmailChange,
     handlePasswordChange,
-    handlePassword2Change,
-    name,
     email,
     password,
-    password2,
-    errors,
     isSubmitting,
     emailInput,
-    passwordInput,
-    password2Input,
-    nameInput
+    passwordInput
   } = useFormValidation(validateAuth, props);
   return (
     <StyledLogin>
@@ -30,33 +22,33 @@ function Login(props) {
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
 
-      <p class={emailInput.p1}>
+      <p className={emailInput.p1}>
       <input
       onChange={handleEmailChange}
-      class="form-control mr-sm-2"
+      className="form-control mr-sm-2"
       type="text"
       name="email"
       placeholder="Enter Email"
       value={email}
       id="email"
       />
-        <p class="invalid-feedback">{emailInput.msg}</p>
+        <p className="invalid-feedback">{emailInput.msg}</p>
       </p>
 
-      <p class={passwordInput.p1}>
+      <p className={passwordInput.p1}>
       <input
       onChange={handlePasswordChange}
-      class="form-control mr-sm-2"
+      className="form-control mr-sm-2"
       type="password"
       name="password"
       placeholder="Enter Password"
       value={password}
       id="p1"
       />
-      <p class="invalid-feedback">{passwordInput.msg}</p>
+      <p className="invalid-feedback">{passwordInput.msg}</p>
     </p>
 
-      <button type="submit" class="btn btn-primary" disabled={isSubmitting}>Login</button>
+      <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Login</button>
       </form>
     </div>
 

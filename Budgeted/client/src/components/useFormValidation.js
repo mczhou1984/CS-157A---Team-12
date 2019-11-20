@@ -1,7 +1,5 @@
 import React from "react";
 import axios from 'axios';
-import {useRoutes, useRedirect} from 'hookrouter';
-import { browserHistory } from 'react-router';
 import auth from './auth'
 
 
@@ -10,8 +8,8 @@ function useFormValidation(validate, props) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [password2, setPassword2] = React.useState("");
-  const [errors, setErrors] = React.useState({});
-  const [isSubmitting, setSubmitting] = React.useState(false);
+  //const [errors, setErrors] = React.useState({});
+  //const [isSubmitting, setSubmitting] = React.useState(false);
   const [emailInput, setEmailInput] = React.useState({});
   const [passwordInput, setPasswordInput] = React.useState({});
   const [password2Input, setPassword2Input] = React.useState({});
@@ -42,8 +40,7 @@ function useFormValidation(validate, props) {
         nameState  = {
             p1:"form-group  has-success",
             input:"form-control mr-sm-2 is-valid",
-            p2:"valid-feedback",
-            msg:errors.email
+            p2:"valid-feedback"
           }
     }
 
@@ -65,16 +62,14 @@ function useFormValidation(validate, props) {
         emailState  = {
         p1:"form-group has-danger",
         input:"form-control mr-sm-2 is-invalid",
-        p2:"invalid-feedback",
-        msg:errors.email
+        p2:"invalid-feedback"
       }
 
     }else{
       emailState  = {
       p1:"form-group  has-success",
       input:"form-control mr-sm-2 is-valid",
-      p2:"valid-feedback",
-      msg:errors.email
+      p2:"valid-feedback"
     }
     }
     setEmailInput(emailState);
@@ -92,16 +87,14 @@ function useFormValidation(validate, props) {
         p1State  = {
         p1:"form-group has-danger",
         input:"form-control mr-sm-2 is-invalid",
-        p2:"invalid-feedback",
-        msg:errors.password
+        p2:"invalid-feedback"
       }
     }
     else{
       p1State  = {
       p1:"form-group  has-success",
       input:"form-control mr-sm-2 is-valid",
-      p2:"valid-feedback",
-      msg:errors.email
+      p2:"valid-feedback"
     }
     }
     setPasswordInput(p1State);
@@ -204,8 +197,6 @@ function useFormValidation(validate, props) {
     email,
     password,
     password2,
-    errors,
-    isSubmitting,
     emailInput,
     passwordInput,
     password2Input,

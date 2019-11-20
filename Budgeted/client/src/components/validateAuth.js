@@ -16,7 +16,7 @@ export default function validateAuth(values) {
 
   if (!values.password2) {
     errors.password2 = "Required Password Re-entry";
-  } else if (values.password != values.password2){
+  } else if (values.password !== values.password2){
     errors.password2 = "Passwords must match!"
   }
   return errors;

@@ -25,6 +25,15 @@ module.exports.comparePassword = function(candidatePassword, hash, callback) {
   });
 };
 
+module.exports.getTransactionsById = function(user_id, callback){
+  let sql = "SELECT date, type, amount FROM (SELECT * FROM transactions NATURAL JOIN account_transactions NATURAL JOIN accounts) as xd WHERE accountID= ?  AND transactionID = transactions_transactionID ORDER BY date";
+  db.query(sql, [user_id], (err, transactions) => {
+    callback(err, transactions);
+  });
+
+
+}
+
 module.exports.getUserByEmail = function(email, callback) {
   let sql =
     "SELECT accountId, email, password, name FROM accounts where email = ?";

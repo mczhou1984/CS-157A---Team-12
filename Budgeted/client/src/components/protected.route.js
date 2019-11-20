@@ -1,5 +1,5 @@
 
-import { BrowserRouter, Redirect, Route } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import React from "react";
 import auth from "./auth";
 

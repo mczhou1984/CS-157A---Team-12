@@ -117,7 +117,7 @@ export const StyledDashboard = styled.div`
   .bg-modal1,
   .bg-modal2 {
     margin:0;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.5);
     width: 100%;
     height: 100%;
     position: absolute;
