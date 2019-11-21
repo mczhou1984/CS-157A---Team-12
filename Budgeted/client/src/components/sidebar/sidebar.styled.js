@@ -18,7 +18,7 @@ export const StyledSidebar = styled.div`
     position: fixed;
     z-index: 100;
     //top: 0;
-    background-color: rgb(66, 101, 133);
+    background-color: rgb(255, 255, 255);
     padding-top: 20px;
     left: -100%;
     animation: slideOpen 0.25s forwards;
@@ -36,16 +36,19 @@ export const StyledSidebar = styled.div`
   .sidebar a,
   .btn-group {
     padding: 6px 8px 6px 16px;
-    color: #ffffff;
+    color: black;
     display: block;
     width: 100%;
-    text-align: center;
+    text-align: left;
     cursor: pointer;
-    opacity: 0.8;
+    opacity: 1;
+  }
+  hr{
+    width: 100%;
   }
 
   .sidebar a:hover {
-    opacity: 1;
+    opacity: .5;
   }
 
   .sidebar.close {

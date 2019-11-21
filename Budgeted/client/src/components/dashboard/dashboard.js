@@ -60,7 +60,7 @@ function handleNegativeTransaction(event){
 
   hideModal1()
 }
-function Modal(){
+function TransactionModal(){
   return (
     <StyledDashboard>
     <div>
@@ -228,4 +228,4 @@ function Dashboard() {
     </StyledDashboard>);
 }
 
-export  {Dashboard, Modal};
+export  {Dashboard, TransactionModal};

@@ -16,13 +16,17 @@ import {StyledSidebar} from './sidebar.styled.js'
       <div className="btn-group">
         <a button="button">
           Balance
+
         </a>
+        <hr/>
         <a button="button">
           Daily Budget
         </a>
+                <hr/>
         <a button="button">
           Transactions
         </a>
+                <hr/>
         <a button="button">
           Analysis
         </a>

@@ -4,8 +4,8 @@ import Users from './components/users/users'
 import Nav from './components/nav/nav'
 import Register from './components/register/register'
 import Login from './components/login/login'
-import Budget from './components/budget'
-import {Dashboard, Modal} from './components/dashboard/dashboard'
+import {Budget,BudgetModal} from './components/budget/budget'
+import {Dashboard, TransactionModal} from './components/dashboard/dashboard'
 import Sidebar from './components/sidebar/sidebar'
 import Toggle from './components/toggle/toggle'
 import Transactions from './components/transactions/transactions'
@@ -37,12 +37,14 @@ import {PublicRoute} from './components/public.route'
   if (sidebarOpen) {
     sidebar = <Sidebar close={openHandler} sidebar={"sidebar"}/>
   }
-  return (<div className="App-header">
+  return (<body className="App-header">
 
     <Router>
       <Nav/>
-              {sidebar}
-        <Modal/>
+        {sidebar}
+        <TransactionModal/>
+                <BudgetModal/>
+
 
         <Toggle click={openHandler}/>
       <Switch>
@@ -54,7 +56,7 @@ import {PublicRoute} from './components/public.route'
         <ProtectedRoute path="/transactions" component={Transactions}/>
       </Switch>
     </Router>
-  </div>
+  </body>
 );
 }
 

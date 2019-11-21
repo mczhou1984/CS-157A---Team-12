@@ -9,6 +9,7 @@ function Transactions() {
   const [transactionData, setTransactionData] = useState('')
   const [dateArr, setDateArr] = useState([])
   const [dummyState, setDummyState] = useState([])
+  const [isPopulated, setIsPopulated] = useState(false)
   let dates = {};
 //  const [userData, setUserData] = useState()
 
@@ -26,8 +27,6 @@ function Transactions() {
   }
     setTransactionData(dates);
   setDateArr(temp);
-
-
   }
 
   function formatDate(dateStr){
@@ -58,6 +57,7 @@ function Transactions() {
       //console.log(groupDataByDate(res.data.transactions, 'date'))
       //setTransactionData(groupDataByDate(res.data.transactions, 'date'))
       groupDataByDate(res.data.transactions, 'date')
+      setIsPopulated(res.data.transactions.length > 0)
       console.log(dates);
     },[])
 
@@ -81,7 +81,9 @@ function Transactions() {
               <td>+$$$</td>
             </tr>
           {renderTransactions(date)}
-          <tr><td></td><td>TOTAL</td></tr>
+
+          <tr class="last-row">
+          <td></td><td>TOTAL</td></tr>
           </tbody>
         </table>
       )
@@ -94,18 +96,25 @@ function Transactions() {
       return (
         <tr>
           <td class="left-col" scope="row">{transactions.type}</td>
-          <td>{transactions.amount > 0 ? '+$' + transactions.amount : '-$' + -transactions.amount}</td>
+          <td>{transactions.amount > 0 ? '+$' + transactions.amount.toFixed(2) : '-$' + -transactions.amount.toFixed(2)}</td>
         </tr>
       )
     })
 
   }
 
+  const renderError = (date) => {
+    return (<StyledTransactions><div>
+            <h2>NO TRANSACTION HISTORY</h2></div>
+
+    </StyledTransactions>)
+  }
+
 
   return (<StyledTransactions>
     <div class="container">
     <div class="table-card">
-    {renderDates()}
+    {isPopulated ? renderDates(): renderError()}
     </div>
 
     </div>

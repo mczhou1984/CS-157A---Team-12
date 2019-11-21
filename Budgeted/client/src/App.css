@@ -23,3 +23,5 @@
 .App-header {
   position: relative;
 }
+
+*:focus {outline:none}

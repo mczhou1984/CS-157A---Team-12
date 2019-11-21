@@ -10,8 +10,15 @@ div {
   margin-top: 50px;
 }
 
+.container{
+  margin: 0 auto;
+}
+
 .table-card {
   background-color:white;
+  width:100%;
+  text-align:center;
+  height:100;
 }
 
 th{
@@ -27,6 +34,15 @@ td{
 }
 table{
   padding: 10%;
+  border-collapse: collapse;
+  margin:0 auto;
+  width: 100%;
+}
+.last-row {
+  border-top:1px solid black;
+}
+hr{
+  width: 100%;
 }
 
 
