@@ -50,6 +50,7 @@ router.post("/transaction", verifyToken, (req, res) => {
           .slice(0, 10)
           .replace(/-/g, "/")
       };
+      console.log(newTransaction.date)
       //console.log(newTransaction);
       User.addTransaction(id, newTransaction, err => {
         if (err) {

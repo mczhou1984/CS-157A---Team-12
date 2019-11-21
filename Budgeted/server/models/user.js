@@ -26,8 +26,16 @@ module.exports.comparePassword = function(candidatePassword, hash, callback) {
 };
 
 module.exports.getTransactionsById = function(user_id, callback){
-  let sql = "SELECT date, type, amount FROM (SELECT * FROM transactions NATURAL JOIN account_transactions NATURAL JOIN accounts) as xd WHERE accountID= ?  AND transactionID = transactions_transactionID ORDER BY date";
+  let sql = "SELECT date, type, amount FROM "+
+  "(SELECT * FROM transactions "+
+    "NATURAL JOIN account_transactions " +
+    "NATURAL JOIN accounts) as xd "+
+    "WHERE accountID= ? " +
+    "AND transactionID = transactions_transactionID "+
+    "ORDER BY date";
   db.query(sql, [user_id], (err, transactions) => {
+    console.log(transactions);
+        console.log(err);
     callback(err, transactions);
   });
 
@@ -46,12 +54,12 @@ module.exports.addTransaction = function(user_id, newTransaction, callback) {
   //
   console.log(newTransaction);
   let sql =
-     ("INSERT IGNORE INTO transactions (type, date, amount) VALUES (?,?,?);"
+     ("INSERT IGNORE INTO transactions (type, date, amount) VALUES (?,now(),?);"
      +"SET @transactionID = LAST_INSERT_ID();"
      +"INSERT INTO account_transactions (accounts_accountID,transactions_transactionID) VALUES(?, @transactionID);");
   db.query(
     sql,
-    [newTransaction.category, newTransaction.date, newTransaction.amount, 1],
+    [newTransaction.category/*, newTransaction.date*/, newTransaction.amount, 1],
     err => {
       console.log(err);
       callback(err);

@@ -14,6 +14,17 @@ div {
   background-color:white;
 }
 
+th{
+  text-align:left;
+  border:0;
+}
+.left-col{
+  text-align:left;
+}
+td{
+  text-align:right;
+  border:0;
+}
 table{
   padding: 10%;
 }

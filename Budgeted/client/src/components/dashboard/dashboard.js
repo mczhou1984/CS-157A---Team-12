@@ -128,7 +128,7 @@ function Dashboard() {
 
 
   function initializeChart() {
-    const data = [10, -20, 40];
+    const data = [10, 20, 40];
     const colours = data.map(
       (value) => value < 0
       ? 'light-red'

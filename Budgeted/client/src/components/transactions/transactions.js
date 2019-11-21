@@ -13,11 +13,6 @@ function Transactions() {
 //  const [userData, setUserData] = useState()
 
   function groupDataByDate (data, date){
-  //   return data.reduce(function(rv, x) {
-  //   (rv[x[date]] = rv[x[date]] || []).push(x);
-  //   return rv;
-  // }, {});
-
   let dates = _.mapValues(_.groupBy(data, 'date'),
                           clist => clist.map(data => _.omit(data, 'date')))
   let temp = [];
@@ -28,25 +23,27 @@ function Transactions() {
       date
     )
     n=n+1
-
   }
-  console.log(dates);
     setTransactionData(dates);
   setDateArr(temp);
 
 
+  }
 
+  function formatDate(dateStr){
+    let date = new Date(dateStr);
+    var monthNames = [
+      "January", "February", "March",
+      "April", "May", "June", "July",
+      "August", "September", "October",
+      "November", "December"
+    ];
 
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var year = date.getFullYear();
 
-  //console.log(dateArr[1].date[1]);
-
-  // let  result = data.reduce(function (r, a) {
-  //       r[a.date] = r[a.date] || [];
-  //       r[a.date].push(a);
-  //       return r;
-  //   }, Object.create(null));
-
-
+    return monthNames[monthIndex]+ ' ' + day + ', ' + year;
   }
 
 
@@ -75,11 +72,16 @@ function Transactions() {
         <table class="table table-hover">
           <thead>
           <tr class="table-active">
-            <th colspan="2" scope="col">{date}</th>
+            <th colspan="2" scope="col">{formatDate(date)}</th>
           </tr>
           </thead>
           <tbody>
+            <tr class="table-primary">
+              <td class="left-col" scope="row">Daily Budget</td>
+              <td>+$$$</td>
+            </tr>
           {renderTransactions(date)}
+          <tr><td></td><td>TOTAL</td></tr>
           </tbody>
         </table>
       )
@@ -91,8 +93,8 @@ function Transactions() {
     return transactionData[date].map(transactions => {
       return (
         <tr>
-          <th scope="row">{transactions.type}</th>
-          <td>{transactions.amount}</td>
+          <td class="left-col" scope="row">{transactions.type}</td>
+          <td>{transactions.amount > 0 ? '+$' + transactions.amount : '-$' + -transactions.amount}</td>
         </tr>
       )
     })
