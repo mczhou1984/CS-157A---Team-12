@@ -67,7 +67,6 @@ export const StyledDashboard = styled.div`
   div {
     text-align: center;
     color: white;
-    margin-top: 50px;
   }
   hr {
     color: white;

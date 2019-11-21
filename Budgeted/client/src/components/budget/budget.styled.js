@@ -153,6 +153,7 @@ h1,h4{
 } */
   .close {
     position: absolute;
+    margin:5%;
     top: 0;
     right: 10px;
     font-size: 42px;
