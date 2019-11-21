@@ -6,7 +6,10 @@ import _ from 'lodash'
 
 function Transactions() {
   //localStorage.clear();
-  const [transactionData, setTransactionData] = useState()
+  const [transactionData, setTransactionData] = useState('')
+  const [dateArr, setDateArr] = useState([])
+  const [dummyState, setDummyState] = useState([])
+  let dates = {};
 //  const [userData, setUserData] = useState()
 
   function groupDataByDate (data, date){
@@ -15,9 +18,27 @@ function Transactions() {
   //   return rv;
   // }, {});
 
-  let grouped = _.mapValues(_.groupBy(data, 'date'),
-                          clist => clist.map(data => _.omit(data, 'date')));
-  return grouped
+  let dates = _.mapValues(_.groupBy(data, 'date'),
+                          clist => clist.map(data => _.omit(data, 'date')))
+  let temp = [];
+  let n = 1;
+  for (let date in dates){
+
+    temp.push(
+      date
+    )
+    n=n+1
+
+  }
+  console.log(dates);
+    setTransactionData(dates);
+  setDateArr(temp);
+
+
+
+
+
+  //console.log(dateArr[1].date[1]);
 
   // let  result = data.reduce(function (r, a) {
   //       r[a.date] = r[a.date] || [];
@@ -37,22 +58,53 @@ function Transactions() {
     const url = '/user/transactions';
     axios.defaults.headers.common['Authorization'] = tmp.token;
     axios.get(url).then(res => {
-      //console.log(res.data.transactions)
       //console.log(groupDataByDate(res.data.transactions, 'date'))
-      setTransactionData(groupDataByDate(res.data.transactions, 'date'))
+      //setTransactionData(groupDataByDate(res.data.transactions, 'date'))
+      groupDataByDate(res.data.transactions, 'date')
+      console.log(dates);
     },[])
 
     //TODO:: axios calls to get graph Data
 
 
+
   }, [])
+  const renderDates = () => {
+    return dateArr.map(date=>{
+      return (
+        <table class="table table-hover">
+          <thead>
+          <tr class="table-active">
+            <th colspan="2" scope="col">{date}</th>
+          </tr>
+          </thead>
+          <tbody>
+          {renderTransactions(date)}
+          </tbody>
+        </table>
+      )
+
+    })
+  }
+
+  const renderTransactions = (date)=> {
+    return transactionData[date].map(transactions => {
+      return (
+        <tr>
+          <th scope="row">{transactions.type}</th>
+          <td>{transactions.amount}</td>
+        </tr>
+      )
+    })
+
+  }
 
 
   return (<StyledTransactions>
     <div class="container">
-
-      <h2>Hello,</h2>
-      <h2>Your Budget: $</h2>
+    <div class="table-card">
+    {renderDates()}
+    </div>
 
     </div>
   </StyledTransactions>);

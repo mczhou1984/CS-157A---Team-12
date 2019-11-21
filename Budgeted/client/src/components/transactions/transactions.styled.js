@@ -9,4 +9,14 @@ div {
   color: white;
   margin-top: 50px;
 }
+
+.table-card {
+  background-color:white;
+}
+
+table{
+  padding: 10%;
+}
+
+
 `;
