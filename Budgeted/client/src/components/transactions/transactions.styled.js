@@ -6,7 +6,7 @@ body {
 }
 div {
   text-align: center;
-  color: white;
+  color: black;
   margin-top: 50px;
 }
 

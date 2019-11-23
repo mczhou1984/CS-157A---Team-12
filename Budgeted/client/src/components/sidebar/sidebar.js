@@ -1,5 +1,6 @@
 import React, {useState} from "react"
 import {StyledSidebar} from './sidebar.styled.js'
+import {Link} from 'react-router-dom';
 
   const Sidebar = (props) => {
   const [sidebarClass, setSidebarClass] = useState(props.sidebar)
@@ -14,22 +15,29 @@ import {StyledSidebar} from './sidebar.styled.js'
         &times;
       </a>
       <div className="btn-group">
-        <a button="button">
+        <Link to="/budget" className="nav-link" eventkey="link-1">
+          <a button="button">
           Balance
-
-        </a>
+          </a>
+        </Link>
         <hr/>
-        <a button="button">
+        <Link to="/Daily Budget" className="nav-link" eventkey="link-1">
+          <a button="button">
           Daily Budget
-        </a>
+          </a>
+        </Link>
                 <hr/>
-        <a button="button">
+        <Link to="/transactions" className="nav-link" eventKey="link-1">
+          <a button="button">
           Transactions
-        </a>
+          </a>
+        </Link>
                 <hr/>
-        <a button="button">
+        <Link to="/Analysis" className="nav-link" eventKey="link-1">
+          <a button="button">
           Analysis
-        </a>
+          </a>
+        </Link>
       </div>
     </div>
   </StyledSidebar>)
