@@ -63,6 +63,92 @@ router.post("/transaction", verifyToken, (req, res) => {
   });
 });
 
+router.post("/budget/income", verifyToken, (req, res) => {
+  jwt.verify(req.token, "yoursecret", (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      let id = authData.data[0].accountId;
+      let newIncome = {
+        type: req.body.type,
+        amount: req.body.amount
+      };
+      console.log(newIncome)
+      User.addIncome(id, newIncome, err => {
+        if (err) {
+          res.json({success: false, msg: "Failed to add income"});
+        } else {
+          return res.json({success: true, msg: "income added!"});
+        }
+      });
+    }
+  });
+});
+
+router.post("/budget/expense", verifyToken, (req, res) => {
+  jwt.verify(req.token, "yoursecret", (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      let id = authData.data[0].accountId;
+      let newExpense = {
+        type: req.body.type,
+        amount: req.body.amount
+      };
+      console.log(newExpense)
+      User.addExpense(id, newExpense, err => {
+        if (err) {
+          res.json({success: false, msg: "Failed to add expense"});
+        } else {
+          return res.json({success: true, msg: "expense added!"});
+        }
+      });
+    }
+  });
+});
+router.post("/budget/savings", verifyToken, (req, res) => {
+  jwt.verify(req.token, "yoursecret", (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      let id = authData.data[0].accountId;
+      let newSavings = {
+        percent:req.body.percent
+      };
+      console.log(newSavings)
+      User.addSavings(id, newSavings, err => {
+        if (err) {
+          res.json({success: false, msg: "Failed to add saving"});
+        } else {
+          return res.json({success: true, msg: "saving added!"});
+        }
+      });
+    }
+  });
+});
+
+router.get(
+  "/budget",
+  passport.authenticate("jwt", {session: false}),
+  (req, res, next) => {
+    console.log(req.user[0].accountId);
+    let user_id = req.user[0].accountId;
+    User.getBudgetById(user_id, (err, budget) =>{
+      if (err){
+        res.json({
+          success:false,
+          msg:"Failed to get budget data"
+        })
+      } else {
+        res.json({
+          success:true,
+          budget:budget
+        })
+      }
+    });
+
+  }
+);
 
 router.get(
   "/transactions",

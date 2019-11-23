@@ -67,6 +67,7 @@ export const StyledDashboard = styled.div`
   div {
     text-align: center;
     color: white;
+    margin:auto;
   }
   hr {
     color: white;
@@ -77,6 +78,7 @@ export const StyledDashboard = styled.div`
   }
   .container {
     position: relative;
+    margin-top:15%;
   }
   /* .graph {
   top: 50%;
@@ -138,6 +140,7 @@ export const StyledDashboard = styled.div`
 } */
   .close {
     position: absolute;
+    margin:5%;
     top: 0;
     right: 10px;
     font-size: 42px;
@@ -147,20 +150,6 @@ export const StyledDashboard = styled.div`
     &:hover {
       color: #666;
     }
-  }
-  .container-top ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-  .container-top ul li a:hover {
-    text-decoration: underline;
-    color: #000;
-  }
-  .container-bottom {
-    margin-top: 50px;
-    padding-left: 16px;
   }
   /* Change styles for span and cancel button on extra small screens */
   @media screen and (max-width: 300px) {

@@ -37,7 +37,7 @@ import {PublicRoute} from './components/public.route'
   if (sidebarOpen) {
     sidebar = <Sidebar close={openHandler} sidebar={"sidebar"}/>
   }
-  return (<body className="App-header">
+  return (<div className="App-header">
 
     <Router>
       <Nav/>
@@ -56,7 +56,7 @@ import {PublicRoute} from './components/public.route'
         <ProtectedRoute path="/transactions" component={Transactions}/>
       </Switch>
     </Router>
-  </body>
+  </div>
 );
 }
 

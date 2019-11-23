@@ -21,7 +21,12 @@
   color: #09d3ac;
 } */
 .App-header {
-  position: relative;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -20px;
 }
+
+
 
 *:focus {outline:none}

@@ -1,6 +1,40 @@
 // Burger.styled.js
 import styled from "styled-components";
 export const StyledBudget = styled.div`
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
   body {
     font-family: Arial, Helvetica, sans-serif;
   }
@@ -8,7 +42,7 @@ export const StyledBudget = styled.div`
     border: none;
     width: 80%;
     display: inline-block;
-    margin-top:5%;
+    margin-top: 5%;
   }
   input[type="text"],
   input[type="email"],
@@ -22,7 +56,9 @@ export const StyledBudget = styled.div`
     focus: grey;
   }
 
-  button:focus {outline:none}
+  button:focus {
+    outline: none;
+  }
   button {
     padding: 14px 20px;
     margin: 8px 0;
@@ -46,7 +82,7 @@ export const StyledBudget = styled.div`
     font-color: white;
     color: white;
     border-radius: 8px;
-    box-shadow:0;
+    box-shadow: 0;
     background-color: transparent;
   }
   .divider {
@@ -75,9 +111,10 @@ export const StyledBudget = styled.div`
     margin-top: 50px;
   } */
 
-h1,h4{
-  color:white;
-}
+  h1,
+  h4 {
+    color: white;
+  }
   hr {
     color: white;
     background-color: white;
@@ -87,6 +124,7 @@ h1,h4{
   }
   .container {
     position: relative;
+    margin-top: 15%;
   }
   /* .graph {
   top: 50%;
@@ -124,13 +162,13 @@ h1,h4{
     margin-top: 80px;
   }
 
-/* input::-webkit-input-placeholder {
+  /* input::-webkit-input-placeholder {
     color: black;
 } */
   .income-modal,
   .expense-modal,
   .savings-modal {
-    margin:0;
+    margin: 0;
     background-color: rgba(0, 0, 0, 0.5);
     width: 100%;
     height: 100%;
@@ -139,7 +177,7 @@ h1,h4{
     display: none;
     justify-content: center;
     align-items: center;
-    z-index:9999999;
+    z-index: 9999999;
   }
   /* .bg-modal2{
   background-color: rgba(0, 0, 0, 0.8);
@@ -153,7 +191,7 @@ h1,h4{
 } */
   .close {
     position: absolute;
-    margin:5%;
+    margin: 5%;
     top: 0;
     right: 10px;
     font-size: 42px;
