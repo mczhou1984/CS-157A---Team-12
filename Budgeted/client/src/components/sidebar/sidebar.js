@@ -15,13 +15,13 @@ import {Link} from 'react-router-dom';
         &times;
       </a>
       <div className="btn-group">
-        <Link to="/budget" className="nav-link" eventkey="link-1">
+        <Link to="/dashboard" className="nav-link" eventkey="link-1">
           <a button="button">
-          Balance
+          Dashboard
           </a>
         </Link>
         <hr/>
-        <Link to="/Daily Budget" className="nav-link" eventkey="link-1">
+        <Link to="/budget" className="nav-link" eventkey="link-1">
           <a button="button">
           Daily Budget
           </a>

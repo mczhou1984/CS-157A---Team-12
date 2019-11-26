@@ -9,7 +9,7 @@ module.exports.addUser = function(user, callback) {
     bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) throw err;
       user.password = hash;
-      let sql = "INSERT INTO budget (balance, daily_budget, savingPercentage) VALUES (0, 0, 0);"
+      let sql = "INSERT INTO budget (balance, daily_budget, savingPercentage, date) VALUES (0, 0, 0,curdate());"
       +"SET @budgetID = LAST_INSERT_ID();"
       +"INSERT into accounts (name, email, password, budgetID) VALUES(?,?,?, @budgetID); "
       +"INSERT INTO income (amount, budgetID) VALUES (0, @budgetID); "
@@ -21,6 +21,17 @@ module.exports.addUser = function(user, callback) {
     });
   });
 };
+
+module.exports.getBalanceById = function(user_id, callback){
+  let sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
+  +"SELECT * FROM budget WHERE budgetID = @budgetID";
+  db.query(sql, [user_id], (err, balance) => {
+        console.log(err);
+        console.log(balance[1][0]);
+    callback(err, balance[1][0]);
+  });
+
+}
 
 module.exports.getIncomeById = function(user_id, callback){
   let sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
@@ -47,9 +58,9 @@ module.exports.getExpensesByID = function(user_id, callback){
 module.exports.deleteIncomeById = function(user_id,incomeID,incomeAmount, callback){
   let sql = "DELETE FROM income WHERE incomeID = ?;"
   +"SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-  +"UPDATE budget SET daily_budget = daily_budget - ?/30 WHERE budgetID = @budgetID;"
+  +"UPDATE budget SET daily_budget = daily_budget - ?/30, balance = balance - ?/30 WHERE budgetID = @budgetID;"
   +"SELECT * FROM income WHERE budgetID = @budgetID";
-  db.query(sql, [incomeID,user_id, incomeAmount], (err, incomes) => {
+  db.query(sql, [incomeID,user_id, incomeAmount,incomeAmount], (err, incomes) => {
         console.log(err);
         console.log(incomes)
     callback(err, incomes[incomes.length-1]);
@@ -60,9 +71,9 @@ module.exports.deleteExpenseById = function(user_id,expenseID,expenseAmount, cal
   //console.log(expenseID)
   let sql = "DELETE FROM expenses WHERE expenseID = ?;"
   +"SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-  +"UPDATE budget SET daily_budget = daily_budget + ?/30 WHERE budgetID = @budgetID;"
+  +"UPDATE budget SET daily_budget = daily_budget + ?/30, balance = balance + ?/30 WHERE budgetID = @budgetID;"
   +"SELECT * FROM expenses WHERE budgetID = @budgetID";
-  db.query(sql, [expenseID,user_id, expenseAmount], (err, expenses) => {
+  db.query(sql, [expenseID,user_id, expenseAmount, expenseAmount], (err, expenses) => {
         console.log(err);
         console.log(expenses[expenses.length-1])
     callback(err, expenses[expenses.length-1]);
@@ -93,14 +104,16 @@ module.exports.getTransactionsById = function(user_id, callback){
 }
 module.exports.getBudgetById = function(user_id, callback){
   let sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-            +"SELECT daily_budget, savingPercentage , SUM(income.amount) AS total_income, SUM(expenses.amount) AS total_expenses "
-             +"FROM budget JOIN expenses USING(budgetID) JOIN income USING(budgetID) WHERE budgetID = @budgetID;"
+  +"SELECT DISTINCT daily_budget, savingPercentage , "
+   +"(SELECT SUM(amount) FROM income WHERE budgetID = @budgetID) AS total_income, "
+   +"(SELECT SUM(amount) FROM expenses WHERE budgetID = @budgetID) AS total_expenses "
+   +"FROM budget,income,expenses WHERE budget.budgetID = @budgetID;"
+
   db.query(sql, [user_id], (err, budget) => {
     console.log(budget[1][0]);
         console.log(err);
     callback(err, budget[1][0]);
   });
-
 }
 
 module.exports.getUserByEmail = function(email, callback) {
@@ -131,14 +144,16 @@ module.exports.addTransaction = function(user_id, newTransaction, callback) {
 module.exports.addIncome = function(user_id, newIncome, callback) {
   //
   console.log(newIncome);
+  let date = new Date();
+  let day = date.getDate();
   let sql =
   "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
   +"INSERT INTO income (budgetID, type, amount) VALUES (@budgetID, ?, ?);"
-+"UPDATE budget SET daily_budget = daily_budget + ?/30 WHERE budgetID = @budgetID;"
++"UPDATE budget SET daily_budget = (daily_budget + ?/30), balance = balance + ?/30 WHERE budgetID = @budgetID;"
 
   db.query(
     sql,
-    [user_id,newIncome.type,newIncome.amount, newIncome.amount],
+    [user_id,newIncome.type,newIncome.amount, newIncome.amount, newIncome.amount],
     err => {
       console.log(err);
       callback(err);
@@ -152,11 +167,11 @@ module.exports.addExpense = function(user_id, newExpense, callback) {
   let sql =
   "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
   +"INSERT INTO expenses (budgetID, type, amount) VALUES (@budgetID, ?, ?);"
-+"UPDATE budget SET daily_budget = daily_budget - ?/30 WHERE budgetID = @budgetID;"
++"UPDATE budget SET daily_budget = daily_budget - ?/30, balance = balance - ?/30 WHERE budgetID = @budgetID;"
 
   db.query(
     sql,
-    [user_id,newExpense.type,newExpense.amount, newExpense.amount],
+    [user_id,newExpense.type,newExpense.amount, newExpense.amount,newExpense.amount],
     err => {
       console.log(err);
       callback(err);

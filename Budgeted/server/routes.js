@@ -32,7 +32,21 @@ router.get(
   "/dashboard",
   passport.authenticate("jwt", {session: false}),
   (req, res, next) => {
-    res.json({user: req.user});
+        let user_id = req.user[0].accountId;
+    User.getBalanceById(user_id, (err, balance) =>{
+      if (err){
+        res.json({
+          success:false,
+          msg:"Failed to get balance data"
+        })
+      } else {
+        res.json({
+          success:true,
+          balance:balance,
+          user:req.user
+        })
+      }
+    });
   }
 );
 

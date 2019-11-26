@@ -110,15 +110,21 @@ function Dashboard() {
   //localStorage.clear();
   const [userData, setUserData] = useState({});
   const [chartData, setChartData] = useState({});
+  const [data, setData] = useState([])
   useEffect(() => {
 
   //  Authenticate user and get user Data
     const tmp = JSON.parse(localStorage.getItem('userData'));
-    const url = '/user/dashboard';
+    let url = '/user/dashboard';
     axios.defaults.headers.common['Authorization'] = tmp.token;
     axios.get(url).then(res => {
+      console.log(res.data)
+      console.log(new Date(res.data.balance.date).getDate()+1)
+      console.log(res.data.balance.date)
       setUserData(res.data.user[0])
     })
+
+
 
     //TODO:: axios calls to get graph Data
     initializeChart()
