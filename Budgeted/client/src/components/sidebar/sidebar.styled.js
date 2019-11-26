@@ -1,16 +1,6 @@
 // Burger.styled.js
 import styled from "styled-components";
 export const StyledSidebar = styled.div`
-  /*header-wrapper {
-    width: 100vw;
-    height: 80px;
-    background-color: navy;
-    color: white;
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-}
-*/
 
   .sidebar {
     height: 100%;
