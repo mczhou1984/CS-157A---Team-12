@@ -85,6 +85,104 @@ router.post("/budget/income", verifyToken, (req, res) => {
   });
 });
 
+router.get(
+  "/budget/income",
+  passport.authenticate("jwt", {session: false}),
+  (req, res, next) => {
+    console.log(req.user[0].accountId);
+    let user_id = req.user[0].accountId;
+    User.getIncomeById(user_id, (err, income) =>{
+      if (err){
+        res.json({
+          success:false,
+          msg:"Failed to get income data"
+        })
+      } else {
+        res.json({
+          success:true,
+          income:income
+        })
+      }
+    });
+
+  }
+);
+
+router.get(
+  "/budget/expense",
+  passport.authenticate("jwt", {session: false}),
+  (req, res, next) => {
+    console.log(req.user[0].accountId);
+    let user_id = req.user[0].accountId;
+    User.getExpensesByID(user_id, (err, expense) =>{
+      if (err){
+        res.json({
+          success:false,
+          msg:"Failed to get expense data"
+        })
+      } else {
+        res.json({
+          success:true,
+          expense:expense
+        })
+      }
+    });
+
+  }
+);
+
+
+router.post("/budget/deleteincome", verifyToken, (req, res) => {
+  jwt.verify(req.token, "yoursecret", (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      let id = authData.data[0].accountId;
+      let incomeID = req.body.incomeID;
+      let incomeAmount = req.body.amount;
+
+      //console.log(incomeAmount)
+      User.deleteIncomeById(id, incomeID,incomeAmount, (err,income) => {
+        if (err) {
+          res.json({success: false, msg: "Failed to delete income"});
+        } else {
+          return res.json({
+            success: true,
+            msg: "income delete!",
+            income:income
+        });
+        }
+      });
+    }
+  });
+});
+
+router.post("/budget/deleteexpense", verifyToken, (req, res) => {
+  jwt.verify(req.token, "yoursecret", (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      let id = authData.data[0].accountId;
+      let expenseID = req.body.expenseID;
+      let expenseAmount = req.body.amount;
+      console.log(req.body)
+      //console.log(incomeAmount)
+      User.deleteExpenseById(id, expenseID,expenseAmount, (err,expense) => {
+        if (err) {
+          res.json({success: false, msg: "Failed to delete expense"});
+        } else {
+          return res.json({
+            success: true,
+            msg: "expense deleted!",
+            expense:expense
+        });
+        }
+      });
+    }
+  });
+});
+
+
 router.post("/budget/expense", verifyToken, (req, res) => {
   jwt.verify(req.token, "yoursecret", (err, authData) => {
     if (err) {

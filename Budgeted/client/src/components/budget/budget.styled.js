@@ -4,6 +4,15 @@ export const StyledBudget = styled.div`
 .slidecontainer {
   width: 100%;
 }
+.income-text{
+  color:green;
+}
+.expense-text{
+  color:orange;
+}
+.savings-text{
+  color:CornflowerBlue ;
+}
 
 .slider {
   -webkit-appearance: none;
@@ -91,7 +100,9 @@ export const StyledBudget = styled.div`
     display: inline-block;
   }
   .modal-contents {
-    height: 300px;
+    overflow-y:auto
+    max-height:750px;
+    height: auto;
     width: 500px;
     background-color: white;
     text-align: center;
@@ -101,6 +112,24 @@ export const StyledBudget = styled.div`
     justify-content: center;
     align-items: center;
   }
+  #income-card{
+    max-width:80%;
+    justify-content: center;
+    align-items: center;
+    margin:auto;
+  }
+  .savings-modal-contents {
+      overflow-y:auto
+      height: 300px;
+      width: 500px;
+      background-color: white;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      border-radius: 4px;
+      justify-content: center;
+      align-items: center;
+    }
   .btnDiv {
     text-alignt: center;
     padding: auto;
@@ -196,6 +225,19 @@ export const StyledBudget = styled.div`
     right: 10px;
     font-size: 42px;
     color: #333;
+    transform: rotate(45deg);
+    cursor: pointer;
+    &:hover {
+      color: #666;
+    }
+  }
+  .close2 {
+    position: absolute;
+    margin-top: 7%;
+    top: 0;
+    right: 10px;
+    font-size: 42px;
+    color: white;
     transform: rotate(45deg);
     cursor: pointer;
     &:hover {

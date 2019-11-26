@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import axios from "axios";
 import {StyledBudget} from "./budget.styled.js";
 import CurrencyInput from "react-currency-input";
+import BudgetContext from "../../context/budget-context"
 //
 function showIncomeModal() {
   document.querySelector(".income-modal").style.display = "flex";
@@ -15,8 +16,6 @@ function showSavingsModal() {
 function handleIncomeChange(event) {}
 
 function BudgetModal() {
-  console.log(localStorage.getItem("savings"))
-  console.log(localStorage.getItem("budget"))
   const [savings, setSavings] = useState(localStorage.getItem("savings")*100);
   const [savingsPerDay, setSavingsPerDay] = useState(
     (
@@ -28,6 +27,28 @@ function BudgetModal() {
   const [incomePerDay, setIncomePerDay] = useState(0);
   const [expense, setExpense] = useState("$0");
   const [expensePerDay, setExpensePerDay] = useState(0);
+  const [incomeArr, setIncomeArr] = useState([])
+    const [expenseArr, setExpenseArr] = useState([])
+
+  useEffect(() => {
+    const tmp = JSON.parse(localStorage.getItem("userData"));
+    let url = "/user/budget/income";
+    axios.defaults.headers.common["Authorization"] = tmp.token;
+    axios.get(url).then(res => {
+      console.log(res.data.income);
+      setIncomeArr(res.data.income.filter(function(income){
+        return income.amount > 0;
+      }))
+    })
+
+    url = "/user/budget/expense";
+    axios.get(url).then(res => {
+      console.log(res.data.expense);
+      setExpenseArr(res.data.expense.filter(function(expense){
+        return expense.amount > 0;
+      }))
+    })
+  }, [])
   function handleAddIncome(event) {
     event.preventDefault();
     const tmp = JSON.parse(localStorage.getItem("userData"));
@@ -48,7 +69,7 @@ function BudgetModal() {
     });
 
     hideModal();
-    window.location.reload();
+  //  window.location.reload();
   }
   function handleAddExpense(event) {
     event.preventDefault();
@@ -70,7 +91,7 @@ function BudgetModal() {
     });
 
     hideModal();
-    window.location.reload();
+  //  window.location.reload();
   }
   function handleAddSaving(event) {
     event.preventDefault();
@@ -89,7 +110,7 @@ function BudgetModal() {
     });
 
     hideModal();
-    window.location.reload();
+//    window.location.reload();
   }
   function hideModal() {
     document.querySelector(".income-modal").style.display = "none";
@@ -105,6 +126,7 @@ function BudgetModal() {
     // setSavings(localStorage.getItem("savings")*100)
     localStorage.setItem("budget", (localStorage.getItem("budget")-(localStorage.getItem("budget") * localStorage.getItem("savings")) / 100
             ).toFixed(2))
+   window.location.reload();
   }
   function handleSliderChange(event) {
     setSavings(event.target.value);
@@ -126,6 +148,75 @@ function BudgetModal() {
     setExpensePerDay(
       (event.target.value.substring(1).replace(",", "") / 30).toFixed(2)
     );
+  }
+  function handleDeleteIncome(incomeID, amount){
+    //event.preventDefault();
+
+    const tmp = JSON.parse(localStorage.getItem("userData"));
+    const url = "/user/budget/deleteincome";
+    axios.defaults.headers.common["Authorization"] = tmp.token;
+    console.log(amount);
+    let req = {
+      incomeID:incomeID,
+      amount:amount
+    }
+    axios.post(url, req).then(res => {
+      console.log(res.data.income);
+      setIncomeArr(res.data.income.filter(function(income){
+        return income.amount > 0;
+      }))
+    })
+  }
+  function handleDeleteExpense(expenseID, amount){
+    //event.preventDefault();
+
+    const tmp = JSON.parse(localStorage.getItem("userData"));
+    const url = "/user/budget/deleteexpense";
+    axios.defaults.headers.common["Authorization"] = tmp.token;
+    let req = {
+      expenseID:expenseID,
+      amount:amount
+    }
+    axios.post(url, req).then(res => {
+      console.log(res.data.expense);
+      setExpenseArr(res.data.expense.filter(function(expense){
+        return expense.amount > 0;
+      }))
+    })
+  }
+
+
+  const renderIncomes = () => {
+    return incomeArr.map(income => {
+      return (
+        <div id="income-card" class="card text-white bg-success mb-3"  key={income.incomeID}>
+        <div className="close2" onClick={()=> handleDeleteIncome(income.incomeID,income.amount)}>
+          +
+        </div>
+  <div class="card-header">{income.type}</div>
+  <div class="card-body">
+    <h4 class="card-title">${(income.amount/30).toFixed(2)} /day</h4>
+    <p class="card-text">${(income.amount).toFixed(2)} /month</p>
+  </div>
+</div>
+      )
+    })
+  }
+  const renderExpenses = () => {
+    return expenseArr.map(expense => {
+      return (
+        <div id="income-card" class="card text-white bg-warning mb-3"  key={expense.expenseID}>
+        <div className="close2" onClick={()=> handleDeleteExpense(expense.expenseID,expense.amount)}>
+          +
+        </div>
+  <div class="card-header">{expense.type}</div>
+  <div class="card-body">
+    <h4 class="card-title">${(expense.amount/30).toFixed(2)} /day</h4>
+    <p class="card-text">${(expense.amount).toFixed(2)} /month</p>
+  </div>
+</div>
+      )
+    })
   }
   return (
     <StyledBudget>
@@ -158,6 +249,7 @@ function BudgetModal() {
                 Add
               </button>
             </form>
+{renderIncomes()}
           </div>
         </div>
         <div className="expense-modal">
@@ -165,7 +257,6 @@ function BudgetModal() {
             <div className="close" onClick={hideModal}>
               +
             </div>
-
             <form onSubmit={handleAddExpense}>
               <h2>{expense} /month</h2>
               <h3>${expensePerDay} /day</h3>
@@ -188,10 +279,11 @@ function BudgetModal() {
                 Add
               </button>
             </form>
+            {renderExpenses()}
           </div>
         </div>
         <div className="savings-modal">
-          <div className="modal-contents">
+          <div className="savings-modal-contents">
             <div className="close" onClick={hideModal}>
               +
             </div>
@@ -222,9 +314,14 @@ function BudgetModal() {
 function Budget() {
   //localStorage.clear();
   const [budget, setBudget] = useState(0);
+  const [income, setTotalIncome] = useState(0);
+  const [expenses, setTotalExpenses] = useState(0);
+  const [savingsPerDay, setSavingsPerDay] = useState(0);
+  const context = useContext(BudgetContext);
 
   useEffect(() => {
     //TODO: Authenticate user and budget data
+    console.log(context)
     const tmp = JSON.parse(localStorage.getItem("userData"));
     const url = "/user/budget";
     axios.defaults.headers.common["Authorization"] = tmp.token;
@@ -236,6 +333,9 @@ function Budget() {
           res.data.budget.daily_budget * res.data.budget.savingPercentage
         ).toFixed(2)
       )
+      setTotalIncome(((res.data.budget.total_income)/30).toFixed(2))
+      setTotalExpenses((res.data.budget.total_expenses/30).toFixed(2))
+      setSavingsPerDay((res.data.budget.daily_budget * res.data.budget.savingPercentage).toFixed(2))
       localStorage.setItem("budget", res.data.budget.daily_budget)
       localStorage.setItem("savings", res.data.budget.savingPercentage)
     })
@@ -259,7 +359,8 @@ function Budget() {
                 onClick={showIncomeModal}
               >
                 Regular Income
-              </button>
+              </button>              <hr/>
+               <h3 className="income-text">${income}</h3>
               <div className="divider" />
               <button
                 type="submit"
@@ -268,7 +369,8 @@ function Budget() {
                 onClick={showExpenseModal}
               >
                 Recurring Expenses
-              </button>
+              </button>              <hr/>
+                             <h3 className="expense-text">${expenses}</h3>
               <div className="divider" />
               <button
                 type="submit"
@@ -278,6 +380,8 @@ function Budget() {
               >
                 Savings
               </button>
+              <hr/>
+                             <h3 className="savings-text">${savingsPerDay}</h3>
             </div>
           </div>
         </div>
