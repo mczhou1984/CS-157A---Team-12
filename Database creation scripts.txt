@@ -34,9 +34,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `budgeteddb`.`budget` (
   `budgetID` INT NOT NULL AUTO_INCREMENT,
-  `balance` DOUBLE NULL,
-  `daily_budget` DOUBLE NULL,
-  `savingPercentage` DOUBLE NULL,
+  `balance` DOUBLE NOT NULL,
+  `daily_budget` DOUBLE NOT NULL,
+  `savingPercentage` DOUBLE NOT NULL,
+  `date` DATE,
   PRIMARY KEY (`budgetID`))
 
 
@@ -49,7 +50,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `budgeteddb`.`transactions` (
   `transactionID` INT NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(45) NULL,
-  `date` DATE NULL,
+  `trans_date` DATE NULL,
   `amount` DOUBLE NULL,
   PRIMARY KEY (`transactionID`))
 ENGINE = InnoDB;
@@ -85,8 +86,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `budgeteddb`.`analysis` (
   `analysisID` INT NOT NULL AUTO_INCREMENT,
-  `timeperiod` VARCHAR(45) NULL,
-  `overdraft` DOUBLE NULL,
+  `date` DATE NOT NULL,
   `surplus` DOUBLE NULL,
   PRIMARY KEY (`analysisID`))
 ENGINE = InnoDB;
@@ -96,18 +96,18 @@ ENGINE = InnoDB;
 -- Table `budgeteddb`.`transactions_budget`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `budgeteddb`.`transactions_budget` (
-  `transactions_transactionID` INT NOT NULL,
-  `budget_budgetID` INT NOT NULL,
-  PRIMARY KEY (`transactions_transactionID`, `budget_budgetID`),
-  INDEX `fk_transactions_has_budget_budget1_idx` (`budget_budgetID` ASC) VISIBLE,
-  INDEX `fk_transactions_has_budget_transactions1_idx` (`transactions_transactionID` ASC) VISIBLE,
+  `transactionID` INT NOT NULL,
+  `budgetID` INT NOT NULL,
+  PRIMARY KEY (`transactionID`, `budgetID`),
+  INDEX `fk_transactions_has_budget_budget1_idx` (`budgetID` ASC) VISIBLE,
+  INDEX `fk_transactions_has_budget_transactions1_idx` (`transactionID` ASC) VISIBLE,
   CONSTRAINT `fk_transactions_has_budget_transactions1`
-    FOREIGN KEY (`transactions_transactionID`)
+    FOREIGN KEY (`transactionID`)
     REFERENCES `budgeteddb`.`transactions` (`transactionID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_transactions_has_budget_budget1`
-    FOREIGN KEY (`budget_budgetID`)
+    FOREIGN KEY (`budgetID`)
     REFERENCES `budgeteddb`.`budget` (`budgetID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
