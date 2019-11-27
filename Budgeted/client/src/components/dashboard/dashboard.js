@@ -5,14 +5,13 @@ import {Chart, Bar} from 'react-chartjs-2'
 import CurrencyInput from 'react-currency-input'
 //
 
-function hideModal1() {
+function hideModal() {
       document.getElementById("negInput").value = '-$0.00'
   document.querySelector('.bg-modal1').style.display = "none"
-}
-function hideModal2() {
   document.getElementById("posInput").value = '+$0.00'
 
   document.querySelector('.bg-modal2').style.display = "none"
+  window.location.reload();
 }
 function showModal1() {
 
@@ -40,7 +39,7 @@ function handlePositiveTransaction(event){
     console.log(res)
   })
 
-  hideModal2()
+  hideModal()
 }
 function handleNegativeTransaction(event){
       event.preventDefault();
@@ -58,7 +57,7 @@ function handleNegativeTransaction(event){
     console.log(res)
   })
 
-  hideModal1()
+  hideModal()
 }
 function TransactionModal(){
   return (
@@ -67,7 +66,7 @@ function TransactionModal(){
     <div className="bg-modal1">
       <div className="modal-contents">
 
-        <div className="close" onClick={hideModal1}>+</div>
+        <div className="close" onClick={hideModal}>+</div>
 
         <form onSubmit={handleNegativeTransaction}>
           <select name="type" id="category1">
@@ -86,7 +85,7 @@ function TransactionModal(){
     <div className="bg-modal2">
       <div className="modal-contents">
 
-        <div className="close" onClick={hideModal2}>+</div>
+        <div className="close" onClick={hideModal}>+</div>
 
         <form onSubmit={handlePositiveTransaction}>
           <select name="type" id="category2">
@@ -107,10 +106,12 @@ function TransactionModal(){
 
 }
 function Dashboard() {
-  //localStorage.clear();
+  // localStorage.clear();
   const [userData, setUserData] = useState({});
   const [chartData, setChartData] = useState({});
   const [data, setData] = useState([])
+  const [budget,setDailyBudget] = useState(0)
+
   useEffect(() => {
 
   //  Authenticate user and get user Data
@@ -119,63 +120,71 @@ function Dashboard() {
     axios.defaults.headers.common['Authorization'] = tmp.token;
     axios.get(url).then(res => {
       console.log(res.data)
-      console.log(new Date(res.data.balance.date).getDate()+1)
-      console.log(res.data.balance.date)
       setUserData(res.data.user[0])
+      let dailybudget = res.data.balance.daily_budget-res.data.balance.daily_budget*res.data.balance.savingPercentage
+      let balance = (res.data.balance.balance)
+      let trans_sum = res.data.balance.trans_sum
+      let date = new Date(res.data.balance.date)
+      let nday = nextDay(date.getDay())
+      let dayAfterNext = nextDay(date.getDay()+1)
+      setDailyBudget((balance+trans_sum).toFixed(2))
+      Chart.defaults.global.defaultFontColor = 'white';
+      Chart.defaults.global.legend.display = false;
+      Chart.defaults.global.responsive = true;
+      console.log(res.data.balance.daily_budget*res.data.balance.savingPercentage);
+      setChartData({
+        labels: [
+          [
+            'Today', '$'+(balance+trans_sum).toFixed(2)
+          ],
+          [
+            nday, '$'+(balance+dailybudget+trans_sum).toFixed(2)
+          ],
+          [
+            dayAfterNext, '$'+(balance+dailybudget*2+trans_sum).toFixed(2)
+          ]
+        ],
+        datasets: [
+          {
+            backgroundColor: 'white',
+            borderColor: 'white',
+            borderWidth: 0,
+            borderSkipped: 'right',
+            hoverBackgroundColor: 'white',
+            hoverBorderColor: 'white',
+            data: [(dailybudget+trans_sum).toFixed(2),(dailybudget+dailybudget+trans_sum).toFixed(2),(dailybudget+dailybudget*2+trans_sum).toFixed(2)]
+          }
+        ]
+
+      })
+
     })
 
 
-
     //TODO:: axios calls to get graph Data
-    initializeChart()
+    //initializeChart()
 
   }, [])
 
 
+function nextDay(day){
+  const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"];
 
-  function initializeChart() {
-    const data = [10, 20, 40];
-    const colours = data.map(
-      (value) => value < 0
-      ? 'light-red'
-      : 'white');
 
-    Chart.defaults.global.defaultFontColor = 'white';
-    Chart.defaults.global.legend.display = false;
-    Chart.defaults.global.responsive = true;
-    setChartData({
-      labels: [
-        [
-          'Today', '$$$'
-        ],
-        [
-          'Monday', '$$$'
-        ],
-        [
-          'Tuesday', '$$$'
-        ]
-      ],
-      datasets: [
-        {
-          backgroundColor: colours,
-          borderColor: 'white',
-          borderWidth: 0,
-          borderSkipped: 'right',
-          hoverBackgroundColor: 'white',
-          hoverBorderColor: 'white',
-          data: data
-        }
-      ]
 
-    })
+  return dayNames[day+1]
 
-  }
+
+
+
+
+}
 
   return (<StyledDashboard>
     <div className="container">
 
       <h2>Hello {userData.name},</h2>
-      <h2>Your Budget: $</h2>
+      <h2>Your Budget: ${budget}</h2>
 
       <div className="chart">
         <Bar data={chartData} options={{

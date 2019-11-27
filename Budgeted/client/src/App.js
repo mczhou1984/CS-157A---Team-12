@@ -8,6 +8,7 @@ import {Budget,BudgetModal} from './components/budget/budget'
 import {Dashboard, TransactionModal} from './components/dashboard/dashboard'
 import Sidebar from './components/sidebar/sidebar'
 import Toggle from './components/toggle/toggle'
+import Analysis from './components/analysis/analysis'
 import Transactions from './components/transactions/transactions'
 import {BrowserRouter as Router, Switch} from 'react-router-dom'
 import {ProtectedRoute} from './components/protected.route'
@@ -54,6 +55,7 @@ import {PublicRoute} from './components/public.route'
         <ProtectedRoute path="/dashboard" component={Dashboard}/>
         <ProtectedRoute path="/budget" component={Budget}/>
         <ProtectedRoute path="/transactions" component={Transactions}/>
+        <ProtectedRoute path="/analysis" component={Analysis}/>
       </Switch>
     </Router>
   </div>

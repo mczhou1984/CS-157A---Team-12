@@ -33,21 +33,25 @@ function BudgetModal() {
   useEffect(() => {
     const tmp = JSON.parse(localStorage.getItem("userData"));
     let url = "/user/budget/income";
-    axios.defaults.headers.common["Authorization"] = tmp.token;
-    axios.get(url).then(res => {
-      console.log(res.data.income);
-      setIncomeArr(res.data.income.filter(function(income){
-        return income.amount > 0;
-      }))
-    })
+    if(tmp != null){
+      axios.defaults.headers.common["Authorization"] = tmp.token;
+      axios.get(url).then(res => {
+        console.log(res.data.income);
+        setIncomeArr(res.data.income.filter(function(income){
+          return income.amount > 0;
+        }))
+      })
 
-    url = "/user/budget/expense";
-    axios.get(url).then(res => {
-      console.log(res.data.expense);
-      setExpenseArr(res.data.expense.filter(function(expense){
-        return expense.amount > 0;
-      }))
-    })
+      url = "/user/budget/expense";
+      axios.get(url).then(res => {
+        console.log(res.data.expense);
+        setExpenseArr(res.data.expense.filter(function(expense){
+          return expense.amount > 0;
+        }))
+      })
+
+    }
+
   }, [])
   function handleAddIncome(event) {
     event.preventDefault();
@@ -189,14 +193,14 @@ function BudgetModal() {
   const renderIncomes = () => {
     return incomeArr.map(income => {
       return (
-        <div id="income-card" class="card text-white bg-success mb-3"  key={income.incomeID}>
+        <div id="income-card" className="card text-white bg-success mb-3"  key={income.incomeID}>
         <div className="close2" onClick={()=> handleDeleteIncome(income.incomeID,income.amount)}>
           +
         </div>
-  <div class="card-header">{income.type}</div>
-  <div class="card-body">
-    <h4 class="card-title">${(income.amount/30).toFixed(2)} /day</h4>
-    <p class="card-text">${(income.amount).toFixed(2)} /month</p>
+  <div className="card-header">{income.type}</div>
+  <div className="card-body">
+    <h4 className="card-title">${(income.amount/30).toFixed(2)} /day</h4>
+    <p className="card-text">${(income.amount).toFixed(2)} /month</p>
   </div>
 </div>
       )
@@ -205,14 +209,14 @@ function BudgetModal() {
   const renderExpenses = () => {
     return expenseArr.map(expense => {
       return (
-        <div id="income-card" class="card text-white bg-warning mb-3"  key={expense.expenseID}>
+        <div id="income-card" className="card text-white bg-warning mb-3"  key={expense.expenseID}>
         <div className="close2" onClick={()=> handleDeleteExpense(expense.expenseID,expense.amount)}>
           +
         </div>
-  <div class="card-header">{expense.type}</div>
-  <div class="card-body">
-    <h4 class="card-title">${(expense.amount/30).toFixed(2)} /day</h4>
-    <p class="card-text">${(expense.amount).toFixed(2)} /month</p>
+  <div className="card-header">{expense.type}</div>
+  <div className="card-body">
+    <h4 className="card-title">${(expense.amount/30).toFixed(2)} /day</h4>
+    <p className="card-text">${(expense.amount).toFixed(2)} /month</p>
   </div>
 </div>
       )
@@ -291,7 +295,7 @@ function BudgetModal() {
             <form onSubmit={handleAddSaving}>
               <h2>{savings}%</h2>
               <h3>${savingsPerDay} /day</h3>
-              <div class="slidecontainer">
+              <div className="slidecontainer">
                 <input
                   id="savingsInput"
                   type="range"
@@ -345,12 +349,12 @@ function Budget() {
   return (
     <StyledBudget>
       <div className="container">
-        <div class="card  mb-3">
-          <div class="card-header bg-success">
+        <div className="card  mb-3">
+          <div className="card-header bg-success">
             <h1>${budget}</h1>
             <h4>/day</h4>
           </div>
-          <div class="card-body">
+          <div className="card-body">
             <div className="btnDiv">
               <button
                 type="submit"

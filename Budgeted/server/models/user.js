@@ -12,8 +12,14 @@ module.exports.addUser = function(user, callback) {
       let sql = "INSERT INTO budget (balance, daily_budget, savingPercentage, date) VALUES (0, 0, 0,curdate());"
       +"SET @budgetID = LAST_INSERT_ID();"
       +"INSERT into accounts (name, email, password, budgetID) VALUES(?,?,?, @budgetID); "
+      +"SET @accountID = LAST_INSERT_ID();"
       +"INSERT INTO income (amount, budgetID) VALUES (0, @budgetID); "
-      +"INSERT INTO expenses (amount, budgetID) VALUES (0, @budgetID)";
+      +"INSERT INTO expenses (amount, budgetID) VALUES (0, @budgetID);"
+      +"INSERT IGNORE INTO transactions (type, trans_date, amount) VALUES ('',now(),0);"
+      +"SET @transactionID = LAST_INSERT_ID();"
+      +"SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = @accountID);"
+      +"INSERT INTO account_transactions (accounts_accountID,transactions_transactionID) VALUES(@accountID, @transactionID);"
+      +"INSERT INTO transactions_budget (budgetID, transactionID) VALUES (@budgetID,@transactionID);"
       db.query(sql, [user.name, user.email, user.password], err => {
         console.log(err);
         callback(err);
@@ -22,14 +28,67 @@ module.exports.addUser = function(user, callback) {
   });
 };
 
+
+function createInsertDates(currDate, dateDiff){
+  let dates = []
+  for(let i = 0; i < dateDiff; i++){
+    let n = currDate.getUTCFullYear() + '-' +
+       ('00' + (currDate.getUTCMonth()+1)).slice(-2) + '-' +
+       ('00' + (currDate.getUTCDate()-i)).slice(-2)
+       dates.push(n)
+  }
+
+
+return dates;
+
+
+}
+
 module.exports.getBalanceById = function(user_id, callback){
+
+
   let sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-  +"SELECT * FROM budget WHERE budgetID = @budgetID";
-  db.query(sql, [user_id], (err, balance) => {
-        console.log(err);
-        console.log(balance[1][0]);
-    callback(err, balance[1][0]);
+  +"SELECT date FROM budget WHERE budgetID = @budgetID"
+  db.query(sql, [user_id], (err, date) => {
+        let currDate = new Date()
+        let qDate = new Date(date[1][0].date)
+        console.log(currDate.getDate())
+        console.log(qDate.getDate())
+
+        if (currDate.getDate() != (qDate.getDate()+1)){
+          console.log("BUDGET NEEDS TO BE UPDATED")
+
+          let dateDiff = currDate.getDate()-(qDate.getDate()+1)
+          console.log("Date DIFF: " + dateDiff)
+          let missingDates = createInsertDates(currDate, dateDiff)
+
+          for(let i = 0; i < missingDates.length; i++){
+            console.log(missingDates[i])
+            sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
+            +"INSERT INTO analysis (analysis_date, surplus) VALUES (?,(SELECT balance FROM budget WHERE budgetID = @budgetID))"
+            db.query(sql, [user_id,missingDates[i]], err =>{
+              console.log(err);
+            })
+          }
+          sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
+          +"UPDATE budget SET date = curdate(), balance = balance + (daily_budget*?)*(1-savingPercentage);"
+          +"SELECT SUM(amount) as trans_sum,daily_budget,balance, savingPercentage,date FROM budget JOIN transactions_budget USING(budgetID) JOIN transactions USING(transactionID) WHERE budgetID = @budgetID";
+          db.query(sql, [user_id, dateDiff], (err, balance) => {
+            callback(err, balance[balance.length-1][0]);
+            console.log(err),
+            console.log(balance[balance.length-1][0])
+          });
+        } else {
+          sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
+          +"SELECT SUM(amount) as trans_sum,daily_budget,balance, savingPercentage,date FROM budget JOIN transactions_budget USING(budgetID) JOIN transactions USING(transactionID) WHERE budgetID = @budgetID";
+          db.query(sql, [user_id], (err, balance) => {
+                console.log(err);
+                console.log(balance[1][0]);
+            callback(err, balance[1][0]);
+          });
+        }
   });
+
 
 }
 
@@ -87,21 +146,7 @@ module.exports.comparePassword = function(candidatePassword, hash, callback) {
   });
 };
 
-module.exports.getTransactionsById = function(user_id, callback){
-  let sql = "SELECT date, type, amount FROM "+
-  "(SELECT * FROM transactions "+
-    "NATURAL JOIN account_transactions " +
-    "NATURAL JOIN accounts) as xd "+
-    "WHERE accountID= ? " +
-    "AND transactionID = transactions_transactionID "+
-    "ORDER BY date";
-  db.query(sql, [user_id], (err, transactions) => {
-    console.log(transactions);
-        console.log(err);
-    callback(err, transactions);
-  });
 
-}
 module.exports.getBudgetById = function(user_id, callback){
   let sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
   +"SELECT DISTINCT daily_budget, savingPercentage , "
@@ -128,19 +173,44 @@ module.exports.addTransaction = function(user_id, newTransaction, callback) {
   //
   console.log(newTransaction);
   let sql =
-     ("INSERT IGNORE INTO transactions (type, date, amount) VALUES (?,now(),?);"
+     "INSERT IGNORE INTO transactions (type, trans_date, amount) VALUES (?,now(),?);"
      +"SET @transactionID = LAST_INSERT_ID();"
-     +"INSERT INTO account_transactions (accounts_accountID,transactions_transactionID) VALUES(?, @transactionID);");
+     +"SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
+     +"INSERT INTO account_transactions (accounts_accountID,transactions_transactionID) VALUES(?, @transactionID);"
+     +"INSERT INTO transactions_budget (budgetID, transactionID) VALUES (@budgetID,@transactionID);"
+      +"UPDATE budget SET balance = balance + ? WHERE budgetID = @budgetID;"
   db.query(
     sql,
-    [newTransaction.category/*, newTransaction.date*/, newTransaction.amount, user_id],
+    [newTransaction.category, newTransaction.amount, user_id,user_id, newTransaction.amount],
     err => {
       console.log(err);
       callback(err);
     }
   );
 };
+module.exports.getTransactionsById = function(user_id, callback){
+  // let sql = "SELECT date, type, amount FROM "+
+  // "(SELECT * FROM transactions "+
+  //   "NATURAL JOIN account_transactions " +
+  //   "NATURAL JOIN accounts) as xd "+
+  //   "WHERE accountID= ? " +
+  //   "AND transactionID = transactions_transactionID "+
+  //   "ORDER BY date";
+  let sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
+  +"SELECT trans_date, type, amount, daily_budget, savingPercentage, transactionID FROM"
+  +"(SELECT * FROM budget JOIN transactions_budget USING(budgetID) JOIN transactions USING(transactionID)) as xd "
+  +"WHERE budgetID = @budgetID AND amount <> 0;"
+  db.query(sql, [user_id], (err, transactions) => {
+    console.log(transactions[1]);
+        console.log(err);
+    callback(err, transactions[1]);
+  });
 
+
+
+
+
+}
 module.exports.addIncome = function(user_id, newIncome, callback) {
   //
   console.log(newIncome);
@@ -149,7 +219,7 @@ module.exports.addIncome = function(user_id, newIncome, callback) {
   let sql =
   "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
   +"INSERT INTO income (budgetID, type, amount) VALUES (@budgetID, ?, ?);"
-+"UPDATE budget SET daily_budget = (daily_budget + ?/30), balance = balance + ?/30 WHERE budgetID = @budgetID;"
++"UPDATE budget SET daily_budget = (daily_budget + ?/30), balance = (balance + ?/30)*(1-savingPercentage) WHERE budgetID = @budgetID;"
 
   db.query(
     sql,
@@ -167,7 +237,7 @@ module.exports.addExpense = function(user_id, newExpense, callback) {
   let sql =
   "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
   +"INSERT INTO expenses (budgetID, type, amount) VALUES (@budgetID, ?, ?);"
-+"UPDATE budget SET daily_budget = daily_budget - ?/30, balance = balance - ?/30 WHERE budgetID = @budgetID;"
++"UPDATE budget SET daily_budget = daily_budget - ?/30, balance = (balance - ?/30)*(1-savingPercentage) WHERE budgetID = @budgetID;"
 
   db.query(
     sql,
@@ -184,7 +254,7 @@ module.exports.addSavings = function(user_id, saving, callback) {
   console.log(saving);
   let sql =
   "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-+"UPDATE budget SET savingPercentage = ? WHERE budgetID = @budgetID;"
++"UPDATE budget SET savingPercentage = ?, balance = balance*(1-savingPercentage) WHERE budgetID = @budgetID;"
 
   db.query(
     sql,

@@ -10,23 +10,41 @@ function Transactions() {
   const [dateArr, setDateArr] = useState([])
   const [dummyState, setDummyState] = useState([])
   const [isPopulated, setIsPopulated] = useState(false)
+  const [totalArr, setTotalArr] = useState([])
   let dates = {};
 //  const [userData, setUserData] = useState()
 
   function groupDataByDate (data, date){
-  let dates = _.mapValues(_.groupBy(data, 'date'),
-                          clist => clist.map(data => _.omit(data, 'date')))
+  let dates = _.mapValues(_.groupBy(data, date),
+                          clist => clist.map(data => _.omit(data, date)))
+
   let temp = [];
+  let total = 0;
   let n = 1;
+  let budget = 0;
+  console.log("`````````````DATES``````````")
+  console.log(dates)
   for (let date in dates){
 
-    temp.push(
-      date
+    for(let i = 0; i < dates[date].length; i++){
+
+      budget = dates[date][i].daily_budget-dates[date][i].daily_budget*dates[date][i].savingPercentage
+      total += dates[date][i].amount
+    }
+    total += budget
+    temp.push({
+      date:date,
+      total:total,
+      budget:budget
+    }
     )
-    n=n+1
   }
+    // console.log(temp)
+    // setTransactionData(dates.filter(function(date){
+    //   return date.amount > 0;
+    // }))
     setTransactionData(dates);
-  setDateArr(temp);
+    setDateArr(temp);
   }
 
   function formatDate(dateStr){
@@ -54,11 +72,12 @@ function Transactions() {
     const url = '/user/transactions';
     axios.defaults.headers.common['Authorization'] = tmp.token;
     axios.get(url).then(res => {
+
       //console.log(groupDataByDate(res.data.transactions, 'date'))
       //setTransactionData(groupDataByDate(res.data.transactions, 'date'))
-      groupDataByDate(res.data.transactions, 'date')
+      groupDataByDate(res.data.transactions, 'trans_date')
       setIsPopulated(res.data.transactions.length > 0)
-      console.log(dates);
+      console.log(res.data);
     },[])
 
     //TODO:: axios calls to get graph Data
@@ -69,21 +88,21 @@ function Transactions() {
   const renderDates = () => {
     return dateArr.map(date=>{
       return (
-        <table class="table table-hover">
+        <table className="table table-hover" key={date.date}>
           <thead>
-          <tr class="table-active">
-            <th colspan="2" scope="col">{formatDate(date)}</th>
+          <tr className="table-active">
+            <th colSpan="2" scope="col">{formatDate(date.date)}</th>
           </tr>
           </thead>
           <tbody>
-            <tr class="table-primary">
-              <td class="left-col" scope="row">Daily Budget</td>
-              <td>+$$$</td>
+            <tr className="table-primary">
+              <td className="left-col" scope="row">Daily Budget</td>
+              <td>+${date.budget.toFixed(2)}</td>
             </tr>
           {renderTransactions(date)}
 
-          <tr class="last-row">
-          <td></td><td>TOTAL</td></tr>
+          <tr className="last-row">
+          <td>TOTAL</td><td> ${date.total.toFixed(2)}</td></tr>
           </tbody>
         </table>
       )
@@ -92,11 +111,11 @@ function Transactions() {
   }
 
   const renderTransactions = (date)=> {
-    return transactionData[date].map(transactions => {
+    return transactionData[date.date].map(transactions => {
       return (
-        <tr>
-          <td class="left-col" scope="row">{transactions.type}</td>
-          <td>{transactions.amount > 0 ? '+$' + transactions.amount.toFixed(2) : '-$' + -transactions.amount.toFixed(2)}</td>
+        <tr  key = {transactions.transactionID}>
+          <td className="left-col" scope="row">{transactions.type}</td>
+          <td>{transactions.amount > 0 ? '+$' + transactions.amount.toFixed(2) : '-$' + (-transactions.amount).toFixed(2)}</td>
         </tr>
       )
     })
@@ -112,8 +131,8 @@ function Transactions() {
 
 
   return (<StyledTransactions>
-    <div class="container">
-    <div class="table-card">
+    <div className="container">
+    <div className="table-card">
     {isPopulated ? renderDates(): renderError()}
     </div>
 
