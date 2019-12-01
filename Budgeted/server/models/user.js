@@ -48,6 +48,17 @@ return dates;
 
 }
 
+module.exports.getAnalysisByID = function(user_id, callback){
+  let sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
+  +"SELECT surplus, analysis_date FROM budget NATURAL JOIN budget_analysis NATURAL JOIN analysis WHERE budgetID = @budgetID;"
+
+  db.query(sql, [user_id], (err, analysis) =>{
+      console.log(err)
+      callback(err,analysis[1])
+
+  })
+}
+
 module.exports.getBalanceById = function(user_id, callback){
 
 

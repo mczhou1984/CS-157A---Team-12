@@ -7,8 +7,8 @@ import CurrencyInput from 'react-currency-input'
 
 function Analysis() {
   //localStorage.clear();
-  const [userData, setUserData] = useState({});
-  const [chartData, setChartData] = useState({});
+  const [userData, setUserData] = useState({})
+  const [chartData, setChartData] = useState({})
   const [data, setData] = useState([])
   const [budget,setDailyBudget] = useState(0)
 
@@ -16,47 +16,40 @@ function Analysis() {
 
   //  Authenticate user and get user Data
     const tmp = JSON.parse(localStorage.getItem('userData'));
-    let url = '/user/dashboard';
+    let url = '/user/analysis';
     axios.defaults.headers.common['Authorization'] = tmp.token;
     axios.get(url).then(res => {
       console.log(res.data)
-      setUserData(res.data.user[0])
-      let dailybudget = res.data.balance.daily_budget-res.data.balance.daily_budget*res.data.balance.savingPercentage
-//      let balance = (res.data.balance.balance-res.data.balance.balance*res.data.balance.savingPercentage)
-      let trans_sum = res.data.balance.trans_sum
-      let date = new Date(res.data.balance.date)
-      let nday = nextDay(date.getDay()+1)
-      let dayAfterNext = nextDay(date.getDay()+2)
-      setDailyBudget((dailybudget+trans_sum).toFixed(2))
-      Chart.defaults.global.defaultFontColor = 'white';
-      Chart.defaults.global.legend.display = false;
-      Chart.defaults.global.responsive = true;
-      console.log(res.data.balance.daily_budget*res.data.balance.savingPercentage);
-      setChartData({
-        labels: [
-          [
-            'Today', '$'+(dailybudget+trans_sum).toFixed(2)
-          ],
-          [
-            nday, '$'+(dailybudget+dailybudget+trans_sum).toFixed(2)
-          ],
-          [
-            dayAfterNext, '$'+(dailybudget+dailybudget*2+trans_sum).toFixed(2)
-          ]
-        ],
-        datasets: [
-          {
-            backgroundColor: 'white',
-            borderColor: 'white',
-            borderWidth: 0,
-            borderSkipped: 'right',
-            hoverBackgroundColor: 'white',
-            hoverBorderColor: 'white',
-            data: [(dailybudget+trans_sum).toFixed(2),(dailybudget+dailybudget+trans_sum).toFixed(2),(dailybudget+dailybudget*2+trans_sum).toFixed(2)]
-          }
-        ]
+//      setUserData(res.data.user[0])
+      // Chart.defaults.global.defaultFontColor = 'white';
+      // Chart.defaults.global.legend.display = false;
+      // Chart.defaults.global.responsive = true;
 
-      })
+      // setChartData({
+      //   labels: [
+      //     [
+      //       'Today', '$'+(dailybudget+trans_sum).toFixed(2)
+      //     ],
+      //     [
+      //       nday, '$'+(dailybudget+dailybudget+trans_sum).toFixed(2)
+      //     ],
+      //     [
+      //       dayAfterNext, '$'+(dailybudget+dailybudget*2+trans_sum).toFixed(2)
+      //     ]
+      //   ],
+      //   datasets: [
+      //     {
+      //       backgroundColor: 'white',
+      //       borderColor: 'white',
+      //       borderWidth: 0,
+      //       borderSkipped: 'right',
+      //       hoverBackgroundColor: 'white',
+      //       hoverBorderColor: 'white',
+      //       data: [(dailybudget+trans_sum).toFixed(2),(dailybudget+dailybudget+trans_sum).toFixed(2),(dailybudget+dailybudget*2+trans_sum).toFixed(2)]
+      //     }
+      //   ]
+      //
+      // })
 
     })
 

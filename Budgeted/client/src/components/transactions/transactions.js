@@ -10,7 +10,6 @@ function Transactions() {
   const [dateArr, setDateArr] = useState([])
   const [dummyState, setDummyState] = useState([])
   const [isPopulated, setIsPopulated] = useState(false)
-  const [totalArr, setTotalArr] = useState([])
   let dates = {};
 //  const [userData, setUserData] = useState()
 
@@ -19,18 +18,18 @@ function Transactions() {
                           clist => clist.map(data => _.omit(data, date)))
 
   let temp = [];
-  let total = 0;
+
   let n = 1;
   let budget = 0;
   console.log("`````````````DATES``````````")
   console.log(dates)
   for (let date in dates){
+      let total = 0;
 
     for(let i = 0; i < dates[date].length; i++){
 
       total += dates[date][i].amount
     }
-    total += budget
     temp.push({
       date:date,
       total:total,
@@ -38,7 +37,10 @@ function Transactions() {
     }
 
     )
+
+
   }
+  console.log(temp)
     setTransactionData(dates);
     setDateArr(temp);
   }

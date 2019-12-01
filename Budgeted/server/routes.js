@@ -57,6 +57,29 @@ router.get(
   }
 );
 
+
+router.get(
+  "/analysis",
+  passport.authenticate("jwt", {session: false}),
+  (req, res, next) => {
+        let user_id = req.user[0].accountId;
+    User.getAnalysisByID(user_id, (err, analysis) =>{
+      if (err){
+        res.json({
+          success:false,
+          msg:"Failed to get analysis data"
+        })
+      } else {
+        res.json({
+          success:true,
+          analysis:analysis,
+          user:req.user
+        })
+      }
+    });
+  }
+);
+
 router.post("/transaction", verifyToken, (req, res) => {
   jwt.verify(req.token, "yoursecret", (err, authData) => {
     if (err) {
