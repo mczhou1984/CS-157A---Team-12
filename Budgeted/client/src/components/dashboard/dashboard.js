@@ -123,25 +123,26 @@ function Dashboard() {
       setUserData(res.data.user[0])
       let dailybudget = res.data.balance.daily_budget-res.data.balance.daily_budget*res.data.balance.savingPercentage
       let balance = (res.data.balance.balance)
+      console.log(balance)
       let trans_sum = res.data.balance.trans_sum
       let date = new Date(res.data.balance.date)
       let nday = nextDay(date.getDay())
       let dayAfterNext = nextDay(date.getDay()+1)
-      setDailyBudget((balance+trans_sum).toFixed(2))
+      setDailyBudget((balance).toFixed(2))
       Chart.defaults.global.defaultFontColor = 'white';
       Chart.defaults.global.legend.display = false;
       Chart.defaults.global.responsive = true;
-      console.log(res.data.balance.daily_budget*res.data.balance.savingPercentage);
+//      console.log(res.data.balance.daily_budget*res.data.balance.savingPercentage);
       setChartData({
         labels: [
           [
-            'Today', '$'+(balance+trans_sum).toFixed(2)
+            'Today', '$'+(balance).toFixed(2)
           ],
           [
-            nday, '$'+(balance+dailybudget+trans_sum).toFixed(2)
+            nday, '$'+(balance+dailybudget).toFixed(2)
           ],
           [
-            dayAfterNext, '$'+(balance+dailybudget*2+trans_sum).toFixed(2)
+            dayAfterNext, '$'+(balance+dailybudget*2).toFixed(2)
           ]
         ],
         datasets: [
@@ -152,7 +153,7 @@ function Dashboard() {
             borderSkipped: 'right',
             hoverBackgroundColor: 'white',
             hoverBorderColor: 'white',
-            data: [(dailybudget+trans_sum).toFixed(2),(dailybudget+dailybudget+trans_sum).toFixed(2),(dailybudget+dailybudget*2+trans_sum).toFixed(2)]
+            data: [(balance).toFixed(2),(balance+dailybudget).toFixed(2),(balance+dailybudget*2).toFixed(2)]
           }
         ]
 
@@ -172,7 +173,7 @@ function nextDay(day){
 
 
 
-  return dayNames[day+1]
+  return dayNames[(day+1)%7]
 
 
 

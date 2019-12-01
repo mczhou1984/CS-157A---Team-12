@@ -28,7 +28,6 @@ function Transactions() {
 
     for(let i = 0; i < dates[date].length; i++){
 
-      budget = dates[date][i].daily_budget-dates[date][i].daily_budget*dates[date][i].savingPercentage
       total += dates[date][i].amount
     }
     total += budget
@@ -37,12 +36,9 @@ function Transactions() {
       total:total,
       budget:budget
     }
+
     )
   }
-    // console.log(temp)
-    // setTransactionData(dates.filter(function(date){
-    //   return date.amount > 0;
-    // }))
     setTransactionData(dates);
     setDateArr(temp);
   }
@@ -56,8 +52,9 @@ function Transactions() {
       "November", "December"
     ];
 
-    var day = date.getDate();
-    var monthIndex = date.getMonth();
+    var day = date.getUTCDate();
+
+    var monthIndex = date.getUTCMonth();
     var year = date.getFullYear();
 
     return monthNames[monthIndex]+ ' ' + day + ', ' + year;
@@ -95,10 +92,6 @@ function Transactions() {
           </tr>
           </thead>
           <tbody>
-            <tr className="table-primary">
-              <td className="left-col" scope="row">Daily Budget</td>
-              <td>+${date.budget.toFixed(2)}</td>
-            </tr>
           {renderTransactions(date)}
 
           <tr className="last-row">

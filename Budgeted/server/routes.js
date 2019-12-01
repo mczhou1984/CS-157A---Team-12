@@ -18,14 +18,21 @@ router.get("/profile", (req, res) => {
   });
 });
 router.post("/register", (req, res) => {
-  const user = req.body;
-  User.addUser(user, err => {
-    if (err) {
-      res.json({success: false, msg: "Failed to register user"});
+  const reqUser = req.body;
+  User.getUserByEmail(reqUser.email, (user,err) =>{
+    if (user){
+      res.json({success:false, msg: "User already exist please login"})
     } else {
-      res.json({success: true, msg: "User registered"});
+      User.addUser(reqUser, err => {
+        if (err) {
+          res.json({success: false, msg: "Failed to register user"});
+        } else {
+          res.json({success: true, msg: "User registered"});
+        }
+      });
     }
-  });
+  })
+
 });
 
 router.get(

@@ -36,7 +36,7 @@ function BudgetModal() {
     if(tmp != null){
       axios.defaults.headers.common["Authorization"] = tmp.token;
       axios.get(url).then(res => {
-        console.log(res.data.income);
+//        console.log(res.data.income);
         setIncomeArr(res.data.income.filter(function(income){
           return income.amount > 0;
         }))
@@ -44,7 +44,7 @@ function BudgetModal() {
 
       url = "/user/budget/expense";
       axios.get(url).then(res => {
-        console.log(res.data.expense);
+//        console.log(res.data.expense);
         setExpenseArr(res.data.expense.filter(function(expense){
           return expense.amount > 0;
         }))
@@ -324,7 +324,6 @@ function Budget() {
   const context = useContext(BudgetContext);
 
   useEffect(() => {
-    //TODO: Authenticate user and budget data
     console.log(context)
     const tmp = JSON.parse(localStorage.getItem("userData"));
     const url = "/user/budget";

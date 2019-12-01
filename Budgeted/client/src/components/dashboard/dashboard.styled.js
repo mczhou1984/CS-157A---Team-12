@@ -78,7 +78,7 @@ export const StyledDashboard = styled.div`
   }
   .container {
     position: relative;
-    margin-top:15%;
+    margin-top:5%;
   }
   /* .graph {
   top: 50%;
