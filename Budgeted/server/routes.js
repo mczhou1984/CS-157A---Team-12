@@ -80,6 +80,27 @@ router.get(
   }
 );
 
+router.get(
+  "/frequentexpenses",
+  passport.authenticate("jwt", {session: false}),
+  (req, res, next) => {
+        let user_id = req.user[0].accountId;
+    User.getFrequentExpensesByID(user_id, (err, frequent_expenses) =>{
+      if (err){
+        res.json({
+          success:false,
+          msg:"Failed to get expense data"
+        })
+      } else {
+        res.json({
+          success:true,
+          frequent_expenses:frequent_expenses
+        })
+      }
+    });
+  }
+);
+
 router.post("/transaction", verifyToken, (req, res) => {
   jwt.verify(req.token, "yoursecret", (err, authData) => {
     if (err) {

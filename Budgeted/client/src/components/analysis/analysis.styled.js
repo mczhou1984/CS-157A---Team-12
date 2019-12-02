@@ -69,6 +69,10 @@ export const StyledAnalysis = styled.div`
     color: white;
     margin:auto;
   }
+
+  div .chart{
+    margin-bottom:5%;
+  }
   hr {
     color: white;
     background-color: white;

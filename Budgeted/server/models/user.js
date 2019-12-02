@@ -4,6 +4,7 @@ const db = mysql.createConnection(config);
 const bcrypt = require("bcrypt");
 
 
+
 module.exports.addUser = function(user, callback) {
   console.log(user);
   bcrypt.genSalt(10, (err, salt) => {
@@ -60,6 +61,15 @@ module.exports.getAnalysisByID = function(user_id, callback){
   })
 }
 
+
+module.exports.getFrequentExpensesByID = function(user_id, callback){
+  let sql = "SELECT type, count(type) as count FROM frequent_expenses WHERE accountID = ? GROUP BY type ORDER BY count(type) DESC;"
+  db.query(sql, [user_id], (err, expenses) =>{
+    console.log(err)
+    callback(err,expenses)
+  })
+}
+
 module.exports.getBalanceById = function(user_id, callback){
 
 
@@ -70,10 +80,13 @@ module.exports.getBalanceById = function(user_id, callback){
         let qDate = new Date(date[1][0].date)
         qDate.setDate(qDate.getDate()+1)
         let timeDiff = currDate.getTime() - qDate.getTime();
-        let dateDiff = (timeDiff / (1000 * 3600 * 24)+1).toFixed(0);
+        let dateDiff = (timeDiff / (1000 * 3600 * 24)).toFixed(0);
         console.log("DATE DIFFERENCE: " + dateDiff)
         console.log(currDate.getDate())
         console.log(qDate.getDate())
+        if(dateDiff === 0 && currDate.getDate() != qDate.getDate()){
+          dateDiff = currDate.getDate() - qDate.getDate()
+        }
 
         if (dateDiff > 0){
           let missingDates = createInsertDates(currDate, dateDiff)
@@ -194,6 +207,12 @@ module.exports.getUserByEmail = function(email, callback) {
 module.exports.addTransaction = function(user_id, newTransaction, callback) {
   //
   console.log(newTransaction);
+  if(newTransaction.amount < 0){
+    let sql = "INSERT INTO frequent_expenses (type, accountID) values (?,?)"
+    db.query(sql, [newTransaction.category, user_id], err => {
+      console.log(err)
+    })
+  }
   let sql =
      "INSERT IGNORE INTO transactions (type, trans_date, amount) VALUES (?,now(),?);"
      +"SET @transactionID = LAST_INSERT_ID();"
@@ -233,7 +252,7 @@ module.exports.addIncome = function(user_id, newIncome, callback) {
   let day = date.getDate();
 
   let sql =   "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-  +"SELECT * FROM transactions NATURAL JOIN transactions_budget NATURAL JOIN budget WHERE budgetID = @budgetID AND type = 'Daily Budget';"
+  +"SELECT * FROM transactions NATURAL JOIN transactions_budget NATURAL JOIN budget WHERE budgetID = @budgetID AND type = 'Daily Budget' AND amount > 0;"
   db.query(
     sql,
     [user_id],
@@ -242,6 +261,7 @@ module.exports.addIncome = function(user_id, newIncome, callback) {
         console.log("RESULTS:------------")
         console.log(results[1])
         if (results[1].length === 0){
+          console.log("DAILY BUDGET DOES NOT EXIST")
           sql =
           "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
           +"INSERT INTO income (budgetID, type, amount) VALUES (@budgetID, ?, ?);"
@@ -259,6 +279,7 @@ module.exports.addIncome = function(user_id, newIncome, callback) {
             }
           );
         } else {
+          console.log("DAILY BUDGET ALREADY EXSIST")
           sql =
           "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
           +"INSERT INTO income (budgetID, type, amount) VALUES (@budgetID, ?, ?);"
@@ -286,7 +307,7 @@ module.exports.addExpense = function(user_id, newExpense, callback) {
   let day = date.getDate();
 
   let sql =   "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-  +"SELECT * FROM transactions NATURAL JOIN transactions_budget NATURAL JOIN budget WHERE budgetID = @budgetID AND type = 'Daily Budget';"
+  +"SELECT * FROM transactions NATURAL JOIN transactions_budget NATURAL JOIN budget WHERE budgetID = @budgetID AND type = 'Daily Budget' AND amount > 0;"
   db.query(
     sql,
     [user_id],

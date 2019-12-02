@@ -86,7 +86,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `budgeteddb`.`analysis` (
   `analysisID` INT NOT NULL AUTO_INCREMENT,
-  `date` DATE NOT NULL,
+  `analysis_date` DATE NOT NULL,
   `surplus` DOUBLE NULL,
   PRIMARY KEY (`analysisID`))
 ENGINE = InnoDB;
@@ -118,93 +118,35 @@ ENGINE = InnoDB;
 -- Table `budgeteddb`.`budget_analysis`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `budgeteddb`.`budget_analysis` (
-  `budget_budgetID` INT NOT NULL,
-  `analysis_analysisID` INT NOT NULL,
-  PRIMARY KEY (`budget_budgetID`, `analysis_analysisID`),
-  INDEX `fk_budget_has_analysis_analysis1_idx` (`analysis_analysisID` ASC) VISIBLE,
-  INDEX `fk_budget_has_analysis_budget1_idx` (`budget_budgetID` ASC) VISIBLE,
+  `budgetID` INT NOT NULL,
+  `analysisID` INT NOT NULL,
+  PRIMARY KEY (`budgetID`, `analysisID`),
+  INDEX `fk_budget_has_analysis_analysis1_idx` (`analysisID` ASC) VISIBLE,
+  INDEX `fk_budget_has_analysis_budget1_idx` (`budgetID` ASC) VISIBLE,
   CONSTRAINT `fk_budget_has_analysis_budget1`
-    FOREIGN KEY (`budget_budgetID`)
+    FOREIGN KEY (`budgetID`)
     REFERENCES `budgeteddb`.`budget` (`budgetID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_budget_has_analysis_analysis1`
-    FOREIGN KEY (`analysis_analysisID`)
+    FOREIGN KEY (`analysisID`)
     REFERENCES `budgeteddb`.`analysis` (`analysisID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `budgeteddb`.`transactions_analysis`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `budgeteddb`.`transactions_analysis` (
-  `transactions_transactionID` INT NOT NULL,
-  `analysis_analysisID` INT NOT NULL,
-  PRIMARY KEY (`transactions_transactionID`, `analysis_analysisID`),
-  INDEX `fk_transactions_has_analysis_analysis1_idx` (`analysis_analysisID` ASC) VISIBLE,
-  INDEX `fk_transactions_has_analysis_transactions1_idx` (`transactions_transactionID` ASC) VISIBLE,
-  CONSTRAINT `fk_transactions_has_analysis_transactions1`
-    FOREIGN KEY (`transactions_transactionID`)
-    REFERENCES `budgeteddb`.`transactions` (`transactionID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_transactions_has_analysis_analysis1`
-    FOREIGN KEY (`analysis_analysisID`)
-    REFERENCES `budgeteddb`.`analysis` (`analysisID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+CREATE TABLE IF NOT EXISTS `budgeteddb`.`frequent_expenses`(
+	`frequent_expensesID` INT NOT NULL AUTO_INCREMENT,
+    `type` VARCHAR(45) NULL,
+    `accountID` INT NOT NULL,
+	FOREIGN KEY (`accountID`)
+    REFERENCES `budgeteddb`.`accounts` (`accountID`),
+    PRIMARY KEY (`frequent_expensesID`)
+    
+)
 ENGINE = InnoDB;
 
-
--- -----------------------------------------------------
--- Table `budgeteddb`.`account_budget`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `budgeteddb`.`account_budget` (
-  `accounts_accountID` INT NOT NULL,
-  `budget_budgetID` INT NOT NULL,
-  INDEX `fk_account_budget_accounts1_idx` (`accounts_accountID` ASC) VISIBLE,
-  INDEX `fk_account_budget_budget1_idx` (`budget_budgetID` ASC) VISIBLE,
-  CONSTRAINT `fk_account_budget_accounts1`
-    FOREIGN KEY (`accounts_accountID`)
-    REFERENCES `budgeteddb`.`accounts` (`accountID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_account_budget_budget1`
-    FOREIGN KEY (`budget_budgetID`)
-    REFERENCES `budgeteddb`.`budget` (`budgetID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `budgeteddb`.`budget_income_expenses`
--- -----------------------------------------------------
--- CREATE TABLE IF NOT EXISTS `budgeteddb`.`budget_income_expenses` (
---   `budget_budgetID` INT NOT NULL,
---   `income_incomeID` INT NOT NULL,
---   `expenses_expenseID` INT NOT NULL,
---   INDEX `fk_table1_budget1_idx` (`budget_budgetID` ASC) VISIBLE,
---   INDEX `fk_table1_income1_idx` (`income_incomeID` ASC) VISIBLE,
---   INDEX `fk_table1_expenses1_idx` (`expenses_expenseID` ASC) VISIBLE,
---   CONSTRAINT `fk_table1_budget1`
---     FOREIGN KEY (`budget_budgetID`)
---     REFERENCES `budgeteddb`.`budget` (`budgetID`)
---     ON DELETE NO ACTION
---     ON UPDATE NO ACTION,
---   CONSTRAINT `fk_table1_income1`
---     FOREIGN KEY (`income_incomeID`)
---     REFERENCES `budgeteddb`.`income` (`incomeID`)
---     ON DELETE NO ACTION
---     ON UPDATE NO ACTION,
---   CONSTRAINT `fk_table1_expenses1`
---     FOREIGN KEY (`expenses_expenseID`)
---     REFERENCES `budgeteddb`.`expenses` (`expenseID`)
---     ON DELETE NO ACTION
---     ON UPDATE NO ACTION)
--- ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -222,22 +164,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `budgeteddb`.`account_analysis`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `budgeteddb`.`account_analysis` (
-  `accounts_accountID` INT NOT NULL,
-  `analysis_analysisID` INT NOT NULL,
-  INDEX `fk_account_analysis_accounts1_idx` (`accounts_accountID` ASC) VISIBLE,
-  INDEX `fk_account_analysis_analysis1_idx` (`analysis_analysisID` ASC) VISIBLE,
-  CONSTRAINT `fk_account_analysis_accounts1`
-    FOREIGN KEY (`accounts_accountID`)
-    REFERENCES `budgeteddb`.`accounts` (`accountID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_account_analysis_analysis1`
-    FOREIGN KEY (`analysis_analysisID`)
-    REFERENCES `budgeteddb`.`analysis` (`analysisID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

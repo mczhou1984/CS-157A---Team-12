@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import {StyledAnalysis} from './analysis.styled.js'
-import {Chart, Bar} from 'react-chartjs-2'
+import {Chart, Bar, Pie} from 'react-chartjs-2'
 import CurrencyInput from 'react-currency-input'
 
 
@@ -9,6 +9,7 @@ function Analysis() {
   //localStorage.clear();
   const [userData, setUserData] = useState({})
   const [chartData, setChartData] = useState({})
+  const [chart2Data, setChart2Data] = useState({})
   const [data, setData] = useState([])
   const [total,setTotal] = useState(0)
   const [average, setAverage] = useState(0)
@@ -36,8 +37,6 @@ function Analysis() {
       let graphData = []
       let total = 0;
       let average = 0;
-
-
       for(let i = 0; i < res.data.analysis.length; i ++ ){
         graphLabels.push(formatDate(res.data.analysis[i].analysis_date))
         total += res.data.analysis[i].surplus;
@@ -65,6 +64,39 @@ function Analysis() {
 
     })
 
+    url = '/user/frequentexpenses'
+    axios.get(url).then(res => {
+      let graph2Labels = []
+      let graph2Data = []
+
+      for(let i = 0; i < res.data.frequent_expenses.length; i++){
+        graph2Data.push(res.data.frequent_expenses[i].count)
+        console.log(res.data.frequent_expenses[i].count)
+        graph2Labels.push(res.data.frequent_expenses[i].type)
+        console.log(res.data.frequent_expenses[i].type)
+      }
+
+      console.log(graph2Data)
+      console.log(graph2Labels)
+
+      setChart2Data({
+        labels: graph2Labels,
+        datasets: [
+          {
+            backgroundColor: 'white',
+            borderColor: 'white',
+            borderWidth: 0,
+            borderSkipped: 'right',
+            hoverBackgroundColor: 'white',
+            hoverBorderColor: 'white',
+            data: graph2Data
+          }
+        ]
+
+      })
+
+    })
+
   }, [])
 
 
@@ -72,11 +104,61 @@ function Analysis() {
   return (<StyledAnalysis>
     <div className="container">
 
-      <h2>Daily Surplus</h2>
-
+      <h2>Frequent Expenses</h2>
       <div className="chart">
-        <h4>Total: ${total}</h4>
-        <h4>Average: ${average}</h4>
+        <Bar data={chart2Data} options={{
+            responsive: true,
+            legend: {
+              display: false
+            },
+            scales: {
+              xAxes: [
+                {
+                  ticks: {
+                    display: true,
+                    beginAtZero: true,
+                    autoSkip: true
+                  },
+                  scaleLabel: {
+                    display: true
+                  },
+                  gridLines: {
+                    color: "white",
+                    display: false,
+                    drawBorder: true //<- set this
+                  }
+                }
+              ],
+              yAxes: [
+                {
+                  ticks: {
+                    display: true,
+                    beginAtZero: true,
+                    autoSkip: false,
+                    callback: function(value) { if (Number.isInteger(value)) { return value; } }
+                  },
+                  scaleLabel: {
+                    display: true
+                  },
+                  gridLines: {
+                    color: "transparent",
+                    display: true,
+                    drawBorder: false,
+                    zeroLineColor: "#ccc",
+                    zeroLineWidth: 1
+                  }
+                }
+              ]
+            }
+
+          }}/>
+
+        </div>
+
+      <h2>Daily Surplus</h2>
+      <div className="chart">
+        <h6>Total: ${total}</h6>
+        <h6>Average: ${average}</h6>
         <Bar data={chartData} options={{
             responsive: true,
             legend: {
