@@ -10,76 +10,73 @@ function Analysis() {
   const [userData, setUserData] = useState({})
   const [chartData, setChartData] = useState({})
   const [data, setData] = useState([])
-  const [budget,setDailyBudget] = useState(0)
+  const [total,setTotal] = useState(0)
+  const [average, setAverage] = useState(0)
+
+  function formatDate(dateStr){
+    let date = new Date(dateStr);
+    let weekDays = ["Mon","Tues","Wed", "Thurs","Fri","Sat","Sun"]
+
+
+    return weekDays[date.getDay()];
+  }
 
   useEffect(() => {
 
-  //  Authenticate user and get user Data
+    //  Authenticate user and get user Data
     const tmp = JSON.parse(localStorage.getItem('userData'));
     let url = '/user/analysis';
     axios.defaults.headers.common['Authorization'] = tmp.token;
     axios.get(url).then(res => {
       console.log(res.data)
-//      setUserData(res.data.user[0])
-      // Chart.defaults.global.defaultFontColor = 'white';
-      // Chart.defaults.global.legend.display = false;
-      // Chart.defaults.global.responsive = true;
+      Chart.defaults.global.defaultFontColor = 'white';
+      Chart.defaults.global.legend.display = false;
+      Chart.defaults.global.responsive = true;
+      let graphLabels = []
+      let graphData = []
+      let total = 0;
+      let average = 0;
 
-      // setChartData({
-      //   labels: [
-      //     [
-      //       'Today', '$'+(dailybudget+trans_sum).toFixed(2)
-      //     ],
-      //     [
-      //       nday, '$'+(dailybudget+dailybudget+trans_sum).toFixed(2)
-      //     ],
-      //     [
-      //       dayAfterNext, '$'+(dailybudget+dailybudget*2+trans_sum).toFixed(2)
-      //     ]
-      //   ],
-      //   datasets: [
-      //     {
-      //       backgroundColor: 'white',
-      //       borderColor: 'white',
-      //       borderWidth: 0,
-      //       borderSkipped: 'right',
-      //       hoverBackgroundColor: 'white',
-      //       hoverBorderColor: 'white',
-      //       data: [(dailybudget+trans_sum).toFixed(2),(dailybudget+dailybudget+trans_sum).toFixed(2),(dailybudget+dailybudget*2+trans_sum).toFixed(2)]
-      //     }
-      //   ]
-      //
-      // })
+
+      for(let i = 0; i < res.data.analysis.length; i ++ ){
+        graphLabels.push(formatDate(res.data.analysis[i].analysis_date))
+        total += res.data.analysis[i].surplus;
+        graphData.push(res.data.analysis[i].surplus)
+      }
+      setAverage((total/res.data.analysis.length).toFixed(2))
+      setTotal(total.toFixed(2))
+      console.log("TOTAL: " + total)
+      console.log("AVERAGE: " + average)
+      setChartData({
+        labels: graphLabels,
+        datasets: [
+          {
+            backgroundColor: 'white',
+            borderColor: 'white',
+            borderWidth: 0,
+            borderSkipped: 'right',
+            hoverBackgroundColor: 'white',
+            hoverBorderColor: 'white',
+            data: graphData
+          }
+        ]
+
+      })
 
     })
-
-
-    //TODO:: axios calls to get graph Data
-    //initializeChart()
 
   }, [])
 
 
-function nextDay(day){
-  const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"];
-
-
-
-  return dayNames[day+1]
-
-
-
-
-
-}
 
   return (<StyledAnalysis>
     <div className="container">
 
-      <h2>Hello {userData.name},</h2>
-      <h2>Your Budget: ${budget}</h2>
+      <h2>Daily Surplus</h2>
 
       <div className="chart">
+        <h4>Total: ${total}</h4>
+        <h4>Average: ${average}</h4>
         <Bar data={chartData} options={{
             responsive: true,
             legend: {
@@ -88,24 +85,37 @@ function nextDay(day){
             scales: {
               xAxes: [
                 {
+                  ticks: {
+                    display: true,
+                    beginAtZero: true,
+                    autoSkip: true
+                  },
                   scaleLabel: {
-                    display: false
+                    display: true
                   },
                   gridLines: {
+                    color: "white",
                     display: false,
-                    drawBorder: false //<- set this
+                    drawBorder: true //<- set this
                   }
                 }
               ],
               yAxes: [
                 {
                   ticks: {
-                    display: false,
+                    display: true,
                     beginAtZero: true,
-                    autoSkip: true
+                    autoSkip: false,
+                    callback: function(value, index, values) {
+                      if(parseInt(value) >= 1000){
+                        return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                      } else {
+                        return '$' + value;
+                      }
+                    }
                   },
                   scaleLabel: {
-                    display: false
+                    display: true
                   },
                   gridLines: {
                     color: "transparent",
@@ -120,11 +130,11 @@ function nextDay(day){
 
           }}/>
 
+        </div>
+
+
       </div>
-
-
-    </div>
     </StyledAnalysis>);
-}
+  }
 
-export default Analysis
+  export default Analysis
