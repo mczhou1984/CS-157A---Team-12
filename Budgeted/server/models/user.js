@@ -20,7 +20,7 @@ module.exports.addUser = function(user, callback) {
       +"INSERT IGNORE INTO transactions (type, trans_date, amount) VALUES ('',now(),0);"
       +"SET @transactionID = LAST_INSERT_ID();"
       +"SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = @accountID);"
-      +"INSERT INTO account_transactions (accounts_accountID,transactions_transactionID) VALUES(@accountID, @transactionID);"
+      +"INSERT INTO account_transactions (accountID,transactionID) VALUES(@accountID, @transactionID);"
       +"INSERT INTO transactions_budget (budgetID, transactionID) VALUES (@budgetID,@transactionID);"
       db.query(sql, [user.name, user.email, user.password], err => {
         console.log(err);
@@ -99,7 +99,7 @@ module.exports.getBalanceById = function(user_id, callback){
             +"INSERT INTO budget_analysis (budgetID, analysisID) VALUES (@budgetID, @analysisID);"
             +"INSERT IGNORE INTO transactions (type, trans_date, amount) VALUES ('Daily Budget',?,(SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID));"
             +"SET @transactionID = LAST_INSERT_ID();"
-            +"INSERT INTO account_transactions (accounts_accountID,transactions_transactionID) VALUES(?, @transactionID);"
+            +"INSERT INTO account_transactions (accountID,transactionID) VALUES(?, @transactionID);"
             +"INSERT INTO transactions_budget (budgetID, transactionID) VALUES (@budgetID,@transactionID);"
             db.query(sql, [user_id,missingDates[i],missingDates[i], user_id], err =>{
               console.log(err);
@@ -217,7 +217,7 @@ module.exports.addTransaction = function(user_id, newTransaction, callback) {
      "INSERT IGNORE INTO transactions (type, trans_date, amount) VALUES (?,now(),?);"
      +"SET @transactionID = LAST_INSERT_ID();"
      +"SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-     +"INSERT INTO account_transactions (accounts_accountID,transactions_transactionID) VALUES(?, @transactionID);"
+     +"INSERT INTO account_transactions (accountID,transactionID) VALUES(?, @transactionID);"
      +"INSERT INTO transactions_budget (budgetID, transactionID) VALUES (@budgetID,@transactionID);"
      +"UPDATE budget SET balance = balance + ? WHERE budgetID = @budgetID;"
   db.query(
@@ -268,7 +268,7 @@ module.exports.addIncome = function(user_id, newIncome, callback) {
           +"UPDATE budget SET balance = balance - daily_budget, daily_budget = (daily_budget + ?/30), balance = balance + daily_budget WHERE budgetID = @budgetID;"
           +"INSERT IGNORE INTO transactions (type, trans_date, amount) VALUES ('Daily Budget',curdate(),(SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID));"
           +"SET @transactionID = LAST_INSERT_ID();"
-          +"INSERT INTO account_transactions (accounts_accountID,transactions_transactionID) VALUES(?, @transactionID);"
+          +"INSERT INTO account_transactions (accountID,transactionID) VALUES(?, @transactionID);"
           +"INSERT INTO transactions_budget (budgetID, transactionID) VALUES (@budgetID,@transactionID);"
           db.query(
             sql,
@@ -321,7 +321,7 @@ module.exports.addExpense = function(user_id, newExpense, callback) {
           +"UPDATE budget SET  balance = balance - daily_budget,daily_budget = (daily_budget - ?/30), balance = balance + daily_budget WHERE budgetID = @budgetID;"
           +"INSERT IGNORE INTO transactions (type, trans_date, amount) VALUES ('Daily Budget',curdate(),(SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID));"
           +"SET @transactionID = LAST_INSERT_ID();"
-          +"INSERT INTO account_transactions (accounts_accountID,transactions_transactionID) VALUES(?, @transactionID);"
+          +"INSERT INTO account_transactions (accountID,transactionID) VALUES(?, @transactionID);"
           +"INSERT INTO transactions_budget (budgetID, transactionID) VALUES (@budgetID,@transactionID);"
           db.query(
             sql,
