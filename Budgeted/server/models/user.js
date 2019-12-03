@@ -155,7 +155,8 @@ module.exports.getExpensesByID = function(user_id, callback){
 module.exports.deleteIncomeById = function(user_id,incomeID,incomeAmount, callback){
   let sql = "DELETE FROM income WHERE incomeID = ?;"
   +"SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-  +"UPDATE budget SET daily_budget = daily_budget - ?/30, balance = balance - ?/30 WHERE budgetID = @budgetID;"
+  +"UPDATE budget SET balance = balance - daily_budget,daily_budget = daily_budget - ?/30, balance = balance + daily_budget WHERE budgetID = @budgetID;"
+  +"UPDATE transactions SET amount = (SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID) WHERE type = 'Daily Budget';"
   +"SELECT * FROM income WHERE budgetID = @budgetID";
   db.query(sql, [incomeID,user_id, incomeAmount,incomeAmount], (err, incomes) => {
         console.log(err);
@@ -168,7 +169,8 @@ module.exports.deleteExpenseById = function(user_id,expenseID,expenseAmount, cal
   //console.log(expenseID)
   let sql = "DELETE FROM expenses WHERE expenseID = ?;"
   +"SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-  +"UPDATE budget SET daily_budget = daily_budget + ?/30, balance = balance + ?/30 WHERE budgetID = @budgetID;"
+  +"UPDATE budget SET balance = balance - daily_budget, daily_budget = daily_budget + ?/30, balance = balance + daily_budget WHERE budgetID = @budgetID;"
+  +"UPDATE transactions SET amount = (SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID) WHERE type = 'Daily Budget';"
   +"SELECT * FROM expenses WHERE budgetID = @budgetID";
   db.query(sql, [expenseID,user_id, expenseAmount, expenseAmount], (err, expenses) => {
         console.log(err);
