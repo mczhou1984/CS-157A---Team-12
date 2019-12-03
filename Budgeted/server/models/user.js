@@ -109,7 +109,7 @@ module.exports.getBalanceById = function(user_id, callback){
           +"INSERT INTO analysis (analysis_date, surplus) VALUES (curdate(),(SELECT balance FROM budget WHERE budgetID = @budgetID));"
           +"SET @analysisID = LAST_INSERT_ID();"
           +"INSERT INTO budget_analysis (budgetID, analysisID) VALUES (@budgetID, @analysisID);"
-          +"UPDATE budget SET date = curdate(), balance = balance + (daily_budget*?)*(1-savingPercentage);"
+          +"UPDATE budget SET date = curdate(), balance = balance + (daily_budget*?)*(1-savingPercentage) WHERE budgetID = @budgetID;"
           +"SELECT SUM(amount) as trans_sum,daily_budget,balance, savingPercentage,date FROM budget JOIN transactions_budget USING(budgetID) JOIN transactions USING(transactionID) WHERE budgetID = @budgetID";
           db.query(sql, [user_id, dateDiff], (err, balance) => {
             callback(err, balance[balance.length-1][0]);
