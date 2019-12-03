@@ -155,7 +155,7 @@ module.exports.getExpensesByID = function(user_id, callback){
 module.exports.deleteIncomeById = function(user_id,incomeID,incomeAmount, callback){
   let sql = "DELETE FROM income WHERE incomeID = ?;"
   +"SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-  +"UPDATE budget SET balance = balance - daily_budget,daily_budget = daily_budget - ?/30, balance = balance + daily_budget WHERE budgetID = @budgetID;"
+  +"UPDATE budget SET balance = balance - daily_budget*(1-savingPercentage),daily_budget = daily_budget - ?/30, balance = balance + daily_budget WHERE budgetID = @budgetID;"
   +"UPDATE transactions SET amount = (SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID) WHERE type = 'Daily Budget';"
   +"SELECT * FROM income WHERE budgetID = @budgetID";
   db.query(sql, [incomeID,user_id, incomeAmount,incomeAmount], (err, incomes) => {
@@ -169,7 +169,7 @@ module.exports.deleteExpenseById = function(user_id,expenseID,expenseAmount, cal
   //console.log(expenseID)
   let sql = "DELETE FROM expenses WHERE expenseID = ?;"
   +"SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
-  +"UPDATE budget SET balance = balance - daily_budget, daily_budget = daily_budget + ?/30, balance = balance + daily_budget WHERE budgetID = @budgetID;"
+  +"UPDATE budget SET balance = balance - daily_budget*(1-savingPercentage), daily_budget = daily_budget + ?/30, balance = balance + daily_budget WHERE budgetID = @budgetID;"
   +"UPDATE transactions SET amount = (SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID) WHERE type = 'Daily Budget';"
   +"SELECT * FROM expenses WHERE budgetID = @budgetID";
   db.query(sql, [expenseID,user_id, expenseAmount, expenseAmount], (err, expenses) => {
@@ -271,7 +271,7 @@ module.exports.addIncome = function(user_id, newIncome, callback) {
           sql =
           "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
           +"INSERT INTO income (budgetID, type, amount) VALUES (@budgetID, ?, ?);"
-          +"UPDATE budget SET balance = balance - daily_budget, daily_budget = (daily_budget + ?/30), balance = balance + daily_budget WHERE budgetID = @budgetID;"
+          +"UPDATE budget SET balance = balance - daily_budget*(1-savingPercentage), daily_budget = (daily_budget + ?/30), balance = balance + daily_budget WHERE budgetID = @budgetID;"
           +"INSERT IGNORE INTO transactions (type, trans_date, amount) VALUES ('Daily Budget',curdate(),(SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID));"
           +"SET @transactionID = LAST_INSERT_ID();"
           +"INSERT INTO account_transactions (accountID,transactionID) VALUES(?, @transactionID);"
@@ -289,7 +289,7 @@ module.exports.addIncome = function(user_id, newIncome, callback) {
           sql =
           "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
           +"INSERT INTO income (budgetID, type, amount) VALUES (@budgetID, ?, ?);"
-          +"UPDATE budget SET balance = balance - daily_budget, daily_budget = (daily_budget + ?/30), balance = balance + daily_budget WHERE budgetID = @budgetID;"
+          +"UPDATE budget SET balance = balance - daily_budget*(1-savingPercentage), daily_budget = (daily_budget + ?/30), balance = balance + daily_budget WHERE budgetID = @budgetID;"
           +"UPDATE transactions SET amount = (SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID) WHERE type = 'Daily Budget'"
 
           db.query(
@@ -324,7 +324,7 @@ module.exports.addExpense = function(user_id, newExpense, callback) {
           sql =
           "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
           +"INSERT INTO expenses (budgetID, type, amount) VALUES (@budgetID, ?, ?);"
-          +"UPDATE budget SET  balance = balance - daily_budget,daily_budget = (daily_budget - ?/30), balance = balance + daily_budget WHERE budgetID = @budgetID;"
+          +"UPDATE budget SET  balance = balance - daily_budget*(1-savingPercentage),daily_budget = (daily_budget - ?/30), balance = balance + daily_budget WHERE budgetID = @budgetID;"
           +"INSERT IGNORE INTO transactions (type, trans_date, amount) VALUES ('Daily Budget',curdate(),(SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID));"
           +"SET @transactionID = LAST_INSERT_ID();"
           +"INSERT INTO account_transactions (accountID,transactionID) VALUES(?, @transactionID);"
@@ -341,7 +341,7 @@ module.exports.addExpense = function(user_id, newExpense, callback) {
           sql =
           "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
           +"INSERT INTO expenses (budgetID, type, amount) VALUES (@budgetID, ?, ?);"
-          +"UPDATE budget SET balance = balance - daily_budget, daily_budget = (daily_budget - ?/30), balance = balance + daily_budget WHERE budgetID = @budgetID;"
+          +"UPDATE budget SET balance = balance - daily_budget*(1-savingPercentage), daily_budget = (daily_budget - ?/30), balance = balance + daily_budget WHERE budgetID = @budgetID;"
           +"UPDATE transactions SET amount = (SELECT (daily_budget*(1-savingPercentage)) FROM budget WHERE budgetID = @budgetID) WHERE type = 'Daily Budget'"
 
           db.query(
