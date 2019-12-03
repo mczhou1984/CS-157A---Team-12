@@ -80,11 +80,11 @@ module.exports.getBalanceById = function(user_id, callback){
         let qDate = new Date(date[1][0].date)
         qDate.setDate(qDate.getDate()+1)
         let timeDiff = currDate.getTime() - qDate.getTime();
-        let dateDiff = (timeDiff / (1000 * 3600 * 24)).toFixed(0);
+        let dateDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
         console.log("DATE DIFFERENCE: " + dateDiff)
         console.log(currDate.getDate())
         console.log(qDate.getDate())
-        if(dateDiff === 0 && currDate.getDate() != qDate.getDate()){
+        if(dateDiff === "0" && currDate.getDate() != qDate.getDate()){
           dateDiff = currDate.getDate() - qDate.getDate()
         }
 
@@ -106,6 +106,9 @@ module.exports.getBalanceById = function(user_id, callback){
             })
           }
           sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
+          +"INSERT INTO analysis (analysis_date, surplus) VALUES (curdate(),(SELECT balance FROM budget WHERE budgetID = @budgetID));"
+          +"SET @analysisID = LAST_INSERT_ID();"
+          +"INSERT INTO budget_analysis (budgetID, analysisID) VALUES (@budgetID, @analysisID);"
           +"UPDATE budget SET date = curdate(), balance = balance + (daily_budget*?)*(1-savingPercentage);"
           +"SELECT SUM(amount) as trans_sum,daily_budget,balance, savingPercentage,date FROM budget JOIN transactions_budget USING(budgetID) JOIN transactions USING(transactionID) WHERE budgetID = @budgetID";
           db.query(sql, [user_id, dateDiff], (err, balance) => {
@@ -220,9 +223,10 @@ module.exports.addTransaction = function(user_id, newTransaction, callback) {
      +"INSERT INTO account_transactions (accountID,transactionID) VALUES(?, @transactionID);"
      +"INSERT INTO transactions_budget (budgetID, transactionID) VALUES (@budgetID,@transactionID);"
      +"UPDATE budget SET balance = balance + ? WHERE budgetID = @budgetID;"
+     +"UPDATE analysis SET surplus = surplus + ? WHERE analysisID IN (SELECT analysisID FROM (SELECT analysisID FROM budget NATURAL JOIN budget_analysis NATURAL JOIN analysis WHERE budgetID = @budgetID AND analysis_date = curdate()) AS tmp);"
   db.query(
     sql,
-    [newTransaction.category, newTransaction.amount, user_id,user_id, newTransaction.amount],
+    [newTransaction.category, newTransaction.amount, user_id,user_id, newTransaction.amount,newTransaction.amount],
     err => {
       console.log(err);
       callback(err);
