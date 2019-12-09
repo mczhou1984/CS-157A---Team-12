@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS `budgeteddb`.`accounts` (
   `name` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
   `password` VARCHAR(100) NULL,
-  `accountscol` VARCHAR(100) NULL,
   `budgetID` INT,
   PRIMARY KEY (`accountID`), FOREIGN KEY (`budgetID`) REFERENCES budget (`budgetID`))
 
