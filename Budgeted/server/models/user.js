@@ -33,6 +33,7 @@ module.exports.addUser = function(user, callback) {
 
 function createInsertDates(currDate, dateDiff){
   let dates = []
+  currDate.setDate(currDate.getDate()-1)
   for(let i = 0; i < dateDiff; i++){
     currDate.setDate(currDate.getDate()-1)
     let n = currDate.getUTCFullYear() + '-' +
@@ -52,7 +53,7 @@ return dates;
 module.exports.getAnalysisByID = function(user_id, callback){
   let sql = "SET @budgetID = (SELECT budgetID FROM accounts WHERE accountID = ?);"
   +"SELECT surplus, analysis_date FROM budget NATURAL JOIN budget_analysis NATURAL JOIN analysis WHERE budgetID = @budgetID "
-  +"ORDER BY analysis_date LIMIT 7"
+  +"ORDER BY analysis_date DESC LIMIT 7"
 
   db.query(sql, [user_id], (err, analysis) =>{
       console.log(err)
@@ -80,12 +81,16 @@ module.exports.getBalanceById = function(user_id, callback){
         let qDate = new Date(date[1][0].date)
         qDate.setDate(qDate.getDate()+1)
         let timeDiff = currDate.getTime() - qDate.getTime();
-        let dateDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        let dateDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
         console.log("DATE DIFFERENCE: " + dateDiff)
         console.log(currDate.getDate())
         console.log(qDate.getDate())
         if(dateDiff === "0" && currDate.getDate() != qDate.getDate()){
           dateDiff = currDate.getDate() - qDate.getDate()
+        }
+
+        if(dateDiff > 0 && currDate.getDate() == qDate.getDate()){
+          dateDiff =0;
         }
 
         if (dateDiff > 0){

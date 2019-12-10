@@ -37,7 +37,7 @@ function Analysis() {
       let graphData = []
       let total = 0;
       let average = 0;
-      for(let i = 0; i < res.data.analysis.length; i ++ ){
+      for(let i = res.data.analysis.length-1; i >= 0; i --){
         graphLabels.push(formatDate(res.data.analysis[i].analysis_date))
         total += res.data.analysis[i].surplus;
         graphData.push(res.data.analysis[i].surplus)
